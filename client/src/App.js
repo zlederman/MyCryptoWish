@@ -41,7 +41,8 @@ class App extends Component {
 
     // Stores a given value, 5 by default.
     contract.methods.set(3).send({ from: accounts[0] })
-    .then((error, tranasctionHash)=>{alert(tranasctionHash);});;
+    .then((error, tranasctionHash)=>{
+    });;
     
     // Get the value from the contract to prove it worked.
     const response =  await contract.methods.get().call();
