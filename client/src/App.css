@@ -1,0 +1,42 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css");
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+.jumbtron {
+margin-top: 51px;
+}
+#hero-btn-grp {
+  display: block;
+  
+
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+.fadeOut{
+  opacity:0;
+
+
+}
+.fadeIn{
+  opacity:1;
+
+
+}
