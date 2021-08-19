@@ -37,6 +37,39 @@ margin-top: 51px;
 }
 .fadeIn{
   opacity:1;
+}
 
 
+.stars-bg {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(#111425,#3751e0);
+  overflow: hidden;
+  background-attachment:fixed ;
+}
+
+.stars-bg i {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;   
+  animation: animate linear infinite;
+}
+
+@keyframes animate {
+  0% {
+      opacity: 0;
+      transform: translateY(0);
+  }
+  10%,90% {
+      opacity: .5;
+  }
+  100% {
+      opacity: 0;
+      transform: translateY(-100px);
+  }
+}
+
+html, body {
+  overscroll-behavior: none;
 }

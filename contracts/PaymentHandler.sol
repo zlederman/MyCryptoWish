@@ -25,6 +25,11 @@ contract PaymentHandler{
         return address(this).balance;
     }
 
+    //function 
+    //pass in address of our wallets and MWF's wallet 
+    //sends ether to those addresses
+    //emits an event saying "PAID" or something
+
     function getPrice() 
     external pure
     returns (uint256){

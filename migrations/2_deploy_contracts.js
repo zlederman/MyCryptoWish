@@ -1,6 +1,6 @@
-var PaymentHandler = artifacts.require("./PaymentHandler.sol");
+var SimpleToken = artifacts.require("./SimpleToken.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(PaymentHandler);
+  deployer.deploy(SimpleToken);
 };
 

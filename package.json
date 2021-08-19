@@ -15,6 +15,7 @@
   "dependencies": {
     "@chainlink/contracts": "^0.2.1",
     "@openzeppelin/contracts": "^4.2.0",
+    "react-notifications": "^1.7.2",
     "truffle": "^5.4.5",
     "truffle-plugin-verify": "^0.5.11"
   }
