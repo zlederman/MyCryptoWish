@@ -2,100 +2,73 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 
-contract MyWish is ERC721 ,ERC721URIStorage, VRFConsumerBase {
 
-    enum Rarity{
-        Common,
-        Uncommon,
-        Rare,
-        SuperRare
-    }
-    /*
-        Chainlink vars
-    */
-    uint256 public tokenCounter;
-    bytes32 internal keyhash;
-    uint256 internal fee;
-    uint256 internal randomResult;
-    /*
-        Assigning wish rarity
-    */
-    uint8 internal uncommonRarity;
-    uint8 internal commonRarity;
-    uint8 internal rareRarity;
-    uint8 internal superRareRarity;
 
-    mapping(bytes32 => address) public requestIdToSender;
-    mapping(string => int) public rarityToDropRate;
-    mapping(bytes32 => string) public requestIdToTokenUri;
-    mapping(bytes32 => uint256) public requestIdToTokenId; 
-    mapping(uint256 => Rarity) public tokenIdToRarity;
 
-    event requestedCollectible(bytes32 indexed requestId);
+/*
+* If we are using a .py Script
+*/ 
+
+contract MyWish is ERC721Enumerable, ERC721URIStorage, Ownable {
     
-    constructor(address _VRFCoordinator, address _linkToken, bytes32 _keyhash)
-    public
-    VRFConsumerBase(_VRFCoordinator, _linkToken)
-    ERC721("MyWish","WSH") {
-
-        tokenCounter = 0;
-        keyhash = _keyhash;
-        fee = 0.1 * 10 ** 18;
-
-
-        rarityToDropRate[enumToString(Rarity.Common)] = 45;
-        rarityToDropRate[enumToString(Rarity.Uncommon)] = 35;
-        rarityToDropRate[enumToString(Rarity.Rare)] = 15;
-        rarityToDropRate[enumToString(Rarity.SuperRare)] = 5;
-
-
-    }
-
-    function createCollectable(string memory tokenURI)
-    public returns (bytes32) {
-        tokenCounter += 1;
-        bytes32 requestId = requestRandomness(keyhash, fee);
-        requestIdToSender[requestId] = msg.sender;
-        requestIdToTokenUri[requestId] = tokenURI;
-        emit requestedCollectible(requestId);
-    }
-
-    function enumToString(Rarity rarity)
-    private pure returns (string memory){
-        if(rarity == Rarity.Common){
-            return "Common";
-        }
-        if(rarity == Rarity.Uncommon){
-            return "Uncommon";
-        }
-        if(rarity == Rarity.Rare){
-            return "Rare";
-        }
-        if(rarity == Rarity.SuperRare){
-            return "SuperRare";
-        }
-    }
-
+    using Counters for Counters.Counter; 
+    using SafeMath for uint256; 
     
 
-    function fulfillRandomness(bytes32 requestId, uint256 randomResult)
-    internal override {
-        int randomVal = int(randomResult % 100);
-        address wishOwner = requestIdToSender[requestId];
-        string memory tokenUri = requestIdToTokenUri[requestId];
-        uint256 newWishId = tokenCounter;
-        _safeMint(wishOwner, newWishId);
-        setTokenURI(newWishId,tokenUri);
-        Rarity rarity = Rarity.Common;
+    Counters.Counter private _tokenId; 
 
-        while(randomVal < rarityToDropRate[enumToString(rarity)]) {
-            randomVal -= rarityToDropRate[enumToString(rarity)];
-            rarity = Rarity(uint(rarity) + 1);
+    uint256 public constant _totalWishes = 10000; 
+    bool internal saleIsActive = false; 
+    uint256 public constant _maxPurchaseAllowed = 20; 
+    uint256 public constant _wishPrice = 30000000000000000; //.03 ETH
+
+
+    //Add mapping token URIs
+    //Test this need to deploy a test net
+
+
+
+    constructor() ERC721("MyWish","WSH") {}
+
+    function createCollectable(uint numberOfTokensMinted) public payable {
+        require(saleIsActive, "Sale is no longer active");
+        require(totalSupply() < _totalWishes, "Sale is over, all collectables sold."); //Might not need this one
+        require(numberOfTokensMinted > 0, "You cannot mint 0 collectables."); 
+        require(numberOfTokensMinted <= _maxPurchaseAllowed, "You are trying to buy to many collectables.");
+        require(SafeMath.add(totalSupply(), numberOfTokensMinted) <= _totalWishes, "Sale is almost over, wishes are running low. Please purchase less wishes.");
+        
+        for (uint i = 0; i < numberOfTokensMinted; i++) {
+            
+            _safeMint(msg.sender, _tokenId.current());
+            _tokenId.increment();
         }
-        tokenIdToRarity[newWishId] = rarity;
-        tokenCounter += 1;
+    }
+
+    function flipStateOfSale() public view onlyOwner { //not sure if I need view
+        saleIsActive != saleIsActive; 
+    }
+
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId) 
+        internal 
+        override(ERC721, ERC721Enumerable) {
+
+        super._beforeTokenTransfer(from, to, tokenId);
+    }
+
+    function supportsInterface(bytes4 interfaceId) 
+        public 
+        view 
+        override(ERC721, ERC721Enumerable) 
+        returns (bool) {
+
+        return super.supportsInterface(interfaceId);
     }
 
     function setTokenURI(uint256 tokenId, string memory _tokenUri) public {
@@ -118,10 +91,8 @@ contract MyWish is ERC721 ,ERC721URIStorage, VRFConsumerBase {
     {
         return super.tokenURI(tokenId);
     }
+} 
 
 
-
-
-}
 
 
