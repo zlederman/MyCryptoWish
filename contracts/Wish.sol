@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
+
 
 
 
@@ -27,8 +27,11 @@ contract MyWish is ERC721Enumerable, ERC721URIStorage, Ownable {
     uint256 public constant _totalWishes = 10000; 
     bool internal saleIsActive = false; 
     uint256 public constant _maxPurchaseAllowed = 20; 
-    uint256 public constant _wishPrice = 30000000000000000; //.03 ETH
 
+
+    mapping(address => uint256)public getTokenId;
+    mapping(address => uint256)public balances;
+    mapping(string => string)public URIS;
 
     //Add mapping token URIs
     //Test this need to deploy a test net
@@ -37,7 +40,7 @@ contract MyWish is ERC721Enumerable, ERC721URIStorage, Ownable {
 
     constructor() ERC721("MyWish","WSH") {}
 
-    function createCollectable(uint numberOfTokensMinted) public payable {
+    function createCollectable(address to, string calldata tokenParams, uint8 numberOfTokensMinted ) public onlyOwner {
         require(saleIsActive, "Sale is no longer active");
         require(totalSupply() < _totalWishes, "Sale is over, all collectables sold."); //Might not need this one
         require(numberOfTokensMinted > 0, "You cannot mint 0 collectables."); 
@@ -45,10 +48,18 @@ contract MyWish is ERC721Enumerable, ERC721URIStorage, Ownable {
         require(SafeMath.add(totalSupply(), numberOfTokensMinted) <= _totalWishes, "Sale is almost over, wishes are running low. Please purchase less wishes.");
         
         for (uint i = 0; i < numberOfTokensMinted; i++) {
-            
-            _safeMint(msg.sender, _tokenId.current());
+            safeMint(to, _tokenId.current());
+            setTokenURI(_tokenId.current(), URIS[tokenParams]);
             _tokenId.increment();
-        }
+  
+        }//probably only allow for one token to be minted
+    }
+
+    function safeMint(address to, uint256 tokenId) private {
+        _safeMint(to, tokenId);
+        getTokenId[to] = tokenId;
+        balances[to] += 1;
+
     }
 
     function flipStateOfSale() public view onlyOwner { //not sure if I need view
@@ -91,6 +102,12 @@ contract MyWish is ERC721Enumerable, ERC721URIStorage, Ownable {
     {
         return super.tokenURI(tokenId);
     }
+
+
+    function setURIMapping(string calldata tokenString, string calldata URI) public {
+        URIS[tokenString] = URI;
+    }
+
 } 
 
 

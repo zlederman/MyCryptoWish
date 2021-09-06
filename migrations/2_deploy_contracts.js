@@ -1,6 +1,8 @@
-var SimpleToken = artifacts.require("./SimpleToken.sol");
+var myWish = artifacts.require("./MyWish.sol");
+var paymentHandler = artifacts.require("./PaymentHandler");
 
 module.exports = function(deployer) {
-  deployer.deploy(SimpleToken);
+  deployer.deploy(myWish);
+  deployer.deploy(paymentHandler);
 };
 

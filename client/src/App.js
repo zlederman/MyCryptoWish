@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import SimpleTokenContract from "./contracts/SimpleToken.json";
 import PaymentHandlerContract from "./contracts/PaymentHandler.json";
 import getWeb3 from "./getWeb3";
+import AboutPage from "./components/about";
 import {Button} from "react-bootstrap"
 import "./App.css";
 
@@ -61,6 +62,7 @@ class App extends Component {
   execPayment = async () => {
       const {accounts, contract } = this.state;
       var price = await contract.methods.getPrice().call();
+      
       contract.methods.sendEther().send({},{from: accounts[0], gas: 3000000, value: price})
       .then((err,receipt) =>{
       // this.runExampleNFT()
@@ -79,9 +81,13 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {/* <div class="stars"></div> */}
-        {/* <NightSky></NightSky>
-        <CardFooter/> */}
+        <AboutPage></AboutPage>
+{/*       
+        <NightSky></NightSky>
+        <CardFooter></CardFooter> */}
+      
+
+
         {/* <Navigation/> */}
         {/* Navbar for site */}
         {/* <Switch>
@@ -90,10 +96,10 @@ class App extends Component {
           <Route path='/about'/> 
         </Switch> */}
         {/* routes for each button on the navbar */}
-        <div>
+        {/* <div>
         <Button onClick={this.onClickEventNFT}>Mint NFT</Button>
         {this.state.storageValue.toString()}
-        </div>
+        </div> */}
 
       </div>
     );
