@@ -25,6 +25,9 @@ margin-top: 51px;
   
 
 }
+.container .jumbotron {
+  border-radius: 6px ;
+}
 
 .App-link {
   color: #09d3ac;
@@ -33,6 +36,8 @@ margin-top: 51px;
 .fadeOut{
   opacity:0;
 
+  transition: visibility 0s 0.5s, opacity 0.5s linear;
+
 
 }
 .fadeIn{
@@ -40,7 +45,7 @@ margin-top: 51px;
 }
 
 
-.stars-bg {
+.sky {
   position: relative;
   width: 100%;
   height: 100vh;
@@ -49,7 +54,7 @@ margin-top: 51px;
   background-attachment:fixed ;
 }
 
-.stars-bg i {
+.sky i {
   position: absolute;
   background: #fff;
   border-radius: 50%;   
@@ -70,6 +75,9 @@ margin-top: 51px;
   }
 }
 
+.vh {
+  margin-bottom: 0;
+}
 html, body {
   overscroll-behavior: none;
 }

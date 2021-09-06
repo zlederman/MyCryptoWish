@@ -4,22 +4,22 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 import "@openzeppelin/contracts/utils/escrow/ConditionalEscrow.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
+import "./Wish.sol";
 
 //Need to set up ownable for contract
 //Need to create reserve function
 
-contract PaymentHandler is PaymentSplitter, Ownable{
+contract PaymentHandler is PaymentSplitter, Ownable {
 
     mapping(address => uint256) balances;
     uint256 constant PRICE = 3 ether;
     event fundsAccepted(address from);
-     
+
     
     /*
         Need to add values to the following variables
     */
-
+    MyWish _myWishContract; 
     address payable _Seb;
     address payable _Zach;
     address payable _Evan;
@@ -31,20 +31,32 @@ contract PaymentHandler is PaymentSplitter, Ownable{
     uint256 _EvanShares = 6;
     uint256 _MakeAWishShares = 90;
 
-    address [] payees = [_Seb, _Zach, _Evan, _MakeAWish];
+    address[] payees = [_Seb, _Zach, _Evan, _MakeAWish];
     uint256[] shares_ = [_SebShares, _ZachShares, _EvanShares, _MakeAWishShares];
 
-    constructor() PaymentSplitter(payees, shares_) {}
+    event tokenMintedEvent(address beneficiary,string tokenParams);
+
+    constructor(address tokenAddress) PaymentSplitter(payees, shares_) {
+        _myWishContract = MyWish(tokenAddress);
+    }
 
 
     //does this put the money into the constract? 
-    function sendEther() public payable{
+    function buyToken(
+        address beneficiary,
+        string calldata tokenParams
+    )
+    public
+    payable
+    {
         require(msg.value > 0 , "Zero Funds Sent Error");
-        if(msg.value < PRICE){ //cant we just require this
-            revert();
-        }
-        balances[msg.sender] += msg.value;
-        emit fundsAccepted(msg.sender);
+        require(msg.value > PRICE,"Not Enough Funds Sent Error");
+        require(beneficiary != address(0),"Invalid Address");
+    
+        // validateTokenParams(tokenParams);
+        processPurchase(beneficiary, tokenParams);
+        releaseEther();
+
     }
 
     //does this return the total balance in the contract? 
@@ -55,10 +67,6 @@ contract PaymentHandler is PaymentSplitter, Ownable{
         return address(this).balance;
     }
 
-    //function 
-    //pass in address of our wallets and MWF's wallet 
-    //sends ether to those addresses
-    //emits an event saying "PAID" or something
 
     function getPrice() 
     external pure
@@ -78,12 +86,14 @@ contract PaymentHandler is PaymentSplitter, Ownable{
         release(_MakeAWish);
     }
 
-    function setAddresses(uint name, address payable _address) public {
+    function setPayees(uint name, address payable _address) onlyOwner  public {
         uint Seb = 0; 
         uint Zach = 1; 
         uint Evan = 2; 
         uint MakeAWish = 3; 
-        //keccak256(bytes(a)) == keccak256(bytes(b));
+
+        require(name >= 0 && name <=3, "Payee Not Found");
+        require(_address != address(0),"Incorrect Address");
 
         if (Seb == name) 
             _Seb = _address; 
@@ -95,4 +105,33 @@ contract PaymentHandler is PaymentSplitter, Ownable{
             _MakeAWish = _address; 
 
     }
+
+    function processPurchase(address beneficiary, string calldata tokenParams) internal {
+
+        _myWishContract.createCollectable(beneficiary,tokenParams, 1);
+        emit tokenMintedEvent(beneficiary, tokenParams);
+    }
+
+    function getPayees(uint name) public view (returns address) {
+        uint Seb = 0; 
+        uint Zach = 1; 
+        uint Evan = 2; 
+        uint MakeAWish = 3; 
+
+        require(name >= 0 && name <=3, "Payee Not Found");
+        if (Seb == name) 
+            return _Seb;
+        else if (Zach == name)
+            return _Zach;
+        else if (Evan == name)
+            return _Evan;
+        else if (MakeAWish == name)
+            return _MakeAWish;
+
+
+    }
+    
+
+
+
 }
