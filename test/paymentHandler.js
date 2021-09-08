@@ -1,26 +1,39 @@
-const paymentHandler = artifacts.requre("./PaymentHandler");
-const wishToken = artifacts.require("./Wish.sol");
+const paymentHandler = artifacts.require("./PaymentHandler.sol");
+const wishToken = artifacts.require("./MyWish.sol");
 
 contract("paymentHandler", accounts => {
     it("should getPrice", async () =>{
-      const paymentHandlerInstance = await paymentHandler.deployed();
+      const tokenInstance = await wishToken.deployed()
+      const ppl = [accounts[0],accounts[1],accounts[2],accounts[3]]
+      const paymentHandlerInstance = await paymentHandler.new(tokenInstance.address,ppl)
+      
       const value = await paymentHandlerInstance.getPrice.call();
-      assert.equal(value,3,"contract method works");
+      assert.equal(value,3000000000000000000,"contract method doesnt work");
     });
-    it("should set and get payees", async (accounts) =>{
-      const paymentHandlerInstance = await paymentHandler.deployed();
-      paymentHandlerInstance.setPayees(0,accounts[1],{from:accounts[1]});
-      paymentHandlerInstance.setPayees(1,accounts[2],{from:accounts[2]});
-      paymentHandlerInstance.setPayees(2,accounts[3],{from:accounts[3]});
-      paymentHandlerInstance.setPayees(3,accounts[4],{from:accounts[4]});
+    it("should get Token contract address",async() =>{
+      const tokenInstance = await wishToken.deployed()
+      const ppl = [accounts[0],accounts[1],accounts[2],accounts[3]]
+      const paymentHandlerInstance = await paymentHandler.new(tokenInstance.address,ppl)
 
-      for(let i = 1; i < 5; i++){
-        let address = paymentHandlerInstance.getPayees.call(i);
-        assert.equal(address,accounts[i],"you can set and get payees"); 
-      }      
-    });
+      const address = await paymentHandlerInstance.getTokenAddress.call();
+      assert.equal(address,tokenInstance.address,"is wrong")
+    })
+    it("should only allow minter role ",async() =>{
+      const tokenInstance = await wishToken.deployed()
+      const ppl = [accounts[0],accounts[1],accounts[2],accounts[3]]
+      
+      const paymentHandlerInstance = await paymentHandler.new(tokenInstance.address,ppl)
+      console.log(paymentHandlerInstance.address)
 
-    it("")
+      const role = await tokenInstance.getName_TEST.call(paymentHandlerInstance.address);
+      await tokenInstance.grantRole.call(role,paymentHandlerInstance.address,{from:accounts[4]});
+      const success = await tokenInstance.hasRole.call(role,accounts[4]);
+
+      assert.equal(true,success,"Name error")
+    })
+
+
+  
 
   });
 
