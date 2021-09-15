@@ -20,8 +20,9 @@ class CardFooter extends Component {
     }
     render() {
         return(
-        <Jumbotron fluid className={(this.state.visible ? "fadeOut " : "fadeIn ") + "vh fixed-bottom"}
-        ref={this.visibilityRef}>
+        <Jumbotron fluid className={(this.state.visible ? "fadeOut " : "fadeIn ") + "vh fixed-bottom "}
+        ref={this.visibilityRef}
+        id="card-footer"> 
         <Container>
             <h1>Are You Ready To Make A Wish?</h1>
             <p>

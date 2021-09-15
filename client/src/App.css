@@ -1,6 +1,12 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css");
 .App {
   text-align: center;
+  overflow-y: scroll;
+  height: 100%;
+
+}
+html {
+  scroll-behavior: smooth;
 }
 
 .App-logo {
@@ -20,11 +26,7 @@
 .jumbtron {
 margin-top: 51px;
 }
-#hero-btn-grp {
-  display: block;
-  
 
-}
 .container .jumbotron {
   border-radius: 6px ;
 }
@@ -35,9 +37,74 @@ margin-top: 51px;
 
 .fadeOut{
   opacity:0;
-
   transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+.about-page{
+  width:80%;
+}
+.navbar{
+  width: 80%;
+  padding-left:20%;
+}
+.nav-brand{
+  padding-right: 8%
+}
+.progress-container{
+  padding-left:calc(20% + 1rem);
+  display: flex;
+}
+#myProgress {
+  margin-top: 7.5%;
+  width: 60%;
+  height: 30px;
+  background-color: black;
+  border-radius: 25px;
+}
 
+#myBar{
+  
+  margin-top: 2px;
+  margin-left: 3px;
+  position: relative;
+  height: 26px;
+  background-color: #7F00FF;
+  border-radius: 19px;
+  width:33%;
+}
+
+.about-brief{
+  margin-top:7.5%;
+  display:inline-flex;
+  width: 60%;
+  justify-content: space-between;
+}
+.about-brief-p {
+  position: relative;
+  width: 40%;
+  text-align: left;
+}
+
+.about-brief-img{
+  position: relative;
+  margin-top:5%
+}
+
+.about-team {
+  position: relative;
+  width:60%;
+  margin-top: 7.5%;
+  margin-left:20%;
+  text-align: left;
+}
+.team-underline{
+  height:2px;
+  background-color: black;
+}
+.team
+
+
+#card-footer{
+  position: absolute;
 
 }
 .fadeIn{
@@ -49,9 +116,9 @@ margin-top: 51px;
   position: relative;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(#111425,#3751e0);
+  background: linear-gradient(#7F00FF,#3751e0);
   overflow: hidden;
-  background-attachment:fixed ;
+  background-attachment:fixed;
 }
 
 .sky i {
@@ -77,6 +144,7 @@ margin-top: 51px;
 
 .vh {
   margin-bottom: 0;
+  background:#FFF ;
 }
 html, body {
   overscroll-behavior: none;
