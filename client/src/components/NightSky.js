@@ -30,6 +30,7 @@ class NightSky extends Component{
     render() {
         return <div className="sky">
             {this.state.stars}
+        
         </div>
     }
 }
