@@ -22,12 +22,10 @@ contract("paymentHandler", accounts => {
       const tokenInstance = await wishToken.deployed()
       const ppl = [accounts[0],accounts[1],accounts[2],accounts[3]]
       
-      const paymentHandlerInstance = await paymentHandler.new(tokenInstance.address,ppl)
+      const paymentHandlerInstance = await paymentHandler.deployed()
       console.log(paymentHandlerInstance.address)
-
-      const role = await tokenInstance.getName_TEST.call(paymentHandlerInstance.address);
-      await tokenInstance.grantRole.call(role,paymentHandlerInstance.address,{from:accounts[4]});
-      const success = await tokenInstance.hasRole.call(role,accounts[4]);
+      await tokenInstance.setMinterRole(paymentHandlerInstance.address,{from:accounts[4]});
+      const success = await tokenInstance.getRole.call({from:paymentHandlerInstance.address})
 
       assert.equal(true,success,"Name error")
     })

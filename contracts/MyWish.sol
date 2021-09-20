@@ -34,17 +34,18 @@ contract MyWish is ERC721Enumerable, ERC721URIStorage, AccessControl {
     mapping(string => string)public URIS;
     string  __name = "MyWish";
     //Add mapping token URIs
-    //Test this need to deploy a test net\usepackage{graphicx}
+
 
 
 
     constructor() ERC721("MyWish","WSH") {
         _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
+        _setRoleAdmin(MINTER_ROLE, DEFAULT_ADMIN_ROLE);
 
         
     }
 
-    function createCollectable(address to, string calldata tokenParams) public  returns(bool) {
+    function createCollectable(address to, string calldata tokenParams) public onlyRole(MINTER_ROLE)  returns(bool) {
         require(saleIsActive, "Sale is no longer active");
         require(totalSupply() < _totalWishes, "Sale is over, all collectables sold."); //Might not need this one
         require(SafeMath.add(totalSupply(), 1) <= _totalWishes, "Sale is almost over, wishes are running low. Please purchase less wishes.");
@@ -107,16 +108,15 @@ contract MyWish is ERC721Enumerable, ERC721URIStorage, AccessControl {
     }
     
 
-    function setMinterRole(address minter) public onlyRole(DEFAULT_ADMIN_ROLE) returns(bool) {
+    function setMinterRole(address minter) public onlyRole(DEFAULT_ADMIN_ROLE) {
         require(minter != address(0),"Please Enter Valid Address");
-    
-        return hasRole(MINTER_ROLE,minter);
+        grantRole(MINTER_ROLE,minter);
        
     }
   
-    function getName_TEST(address minter) public view  returns(bytes32) {
-        
-        return bytes32(0);
+    function getRole() public onlyRole(MINTER_ROLE) view  returns(bool) {
+       
+        return true;
     }
 
     function setURIMapping(string calldata tokenString, string calldata URI) public {
