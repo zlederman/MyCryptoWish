@@ -13,6 +13,7 @@ contract PaymentHandler is PaymentSplitter {
     mapping(address => uint256) balances;
     uint256 constant PRICE = 3000000000000000000 wei;
     event fundsAccepted(address from);
+    uint256 totalSales;
 
     
     /*
@@ -37,6 +38,7 @@ contract PaymentHandler is PaymentSplitter {
 
     constructor(address tokenAddress,address[] memory payees) PaymentSplitter(payees, shares_) {
         _myWishContract = MyWish(tokenAddress);
+        totalSales = 0;
     }
 
 
@@ -55,6 +57,8 @@ contract PaymentHandler is PaymentSplitter {
         bool success = processPurchase(beneficiary, tokenParams);
         require(success,"Token Not Minted Error");
         releaseEther();
+        totalSales +=1;
+
 
     }
 
@@ -90,53 +94,21 @@ contract PaymentHandler is PaymentSplitter {
         release(_MakeAWish);
     }
 
-    // function setPayees(uint name, address payable _address) onlyOwner  public {
-    //     uint Seb = 0; 
-    //     uint Zach = 1; 
-    //     uint Evan = 2; 
-    //     uint MakeAWish = 3; 
-
-    //     require(name >= 0 && name <=3, "Payee Not Found");
-    //     require(_address != address(0),"Incorrect Address");
-
-    //     if (Seb == name) 
-    //         _Seb = _address; 
-    //     else if (Zach == name)
-    //         _Zach = _address; 
-    //     else if (Evan == name)
-    //         _Evan = _address; 
-    //     else if (MakeAWish == name)
-    //         _MakeAWish = _address; 
-
-    // }
 
     function processPurchase(address beneficiary, string calldata tokenParams) internal returns(bool) {
 
         bool success = _myWishContract.createCollectable(beneficiary,tokenParams);
         require(success,"Token Contract Did Not Mint Token");
         emit tokenMintedEvent(beneficiary, tokenParams);
+
         return success == true;
     }
 
-    // function getPayees(uint name) public view returns (address) {
-    //     uint Seb = 0; 
-    //     uint Zach = 1; 
-    //     uint Evan = 2; 
-    //     uint MakeAWish = 3; 
-
-    //     require(name >= 0 && name <=3, "Payee Not Found");
-    //     if (Seb == name) 
-    //         return _Seb;
-    //     else if (Zach == name)
-    //         return _Zach;
-    //     else if (Evan == name)
-    //         return _Evan;
-    //     else if (MakeAWish == name)
-    //         return _MakeAWish;
+    function getTotalSales() public view returns (uint256) {
+            return totalSales;
+    }
 
 
-    // }
-    
 
 
 
