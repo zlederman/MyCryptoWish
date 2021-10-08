@@ -100,7 +100,6 @@ contract PaymentHandler is PaymentSplitter {
         bool success = _myWishContract.createCollectable(beneficiary,tokenParams);
         require(success,"Token Contract Did Not Mint Token");
         emit tokenMintedEvent(beneficiary, tokenParams);
-
         return success == true;
     }
 

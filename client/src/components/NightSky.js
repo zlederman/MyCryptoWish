@@ -3,11 +3,14 @@ import "../App.css"
 class NightSky extends Component{
     state = {stars: []}
     componentDidMount = () =>{
+        this.setState({stars: this.allStars()})
+    }
+    allStars = () =>{
         let elements = Array(500)
-        for(let i = 0; i < 500;i ++){
-            elements[i] = this.buildStar()
+        for(let i = 0; i< 500; i++){
+            elements[i] = this.buildStar(i);
         }
-        this.setState({stars: elements})
+        return elements
     }
     buildStar = (i) => {
         let x = Math.floor(Math.random() * window.innerWidth);

@@ -30,9 +30,6 @@ contract("paymentHandler", accounts => {
       assert.equal(true,success,"Name error")
     })
 
-
-  
-
   });
 
 

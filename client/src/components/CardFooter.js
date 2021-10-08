@@ -4,15 +4,15 @@ import {Container,Jumbotron,Button} from "react-bootstrap";
 class CardFooter extends Component {
    
     constructor(props) {
+
+        console.log(props)
         super(props)
         this.state = {
             visible: false,
         }
-        this.visibilityRef = React.createRef();
-        this.alterVisibility = this.alterVisibility.bind(this)
     }
+       
     alterVisibility =() => {
-        console.log("o")
         this.setState(prevState => ({
             visible: !prevState.visible
           }));
@@ -29,10 +29,11 @@ class CardFooter extends Component {
                 Welcome to the first NFT offering directly benefiting Make
                 A Wish Foundation!
             </p>
-            <Button onClick={this.alterVisibility} >Make Your Wish!</Button>
+            <Button onClick={()=>{ this.props.handleClick(); this.alterVisibility()}} >Make Your Wish!</Button>
         </Container>
         </Jumbotron>
         )
-    }
+    
+}
 }
 export default CardFooter;

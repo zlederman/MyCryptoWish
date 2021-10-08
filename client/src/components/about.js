@@ -8,8 +8,9 @@ class AboutPage extends Component{
         return(
                 <div className="container" id="page">
                     <div className="container" id="nav">
+                        <div><h3>MyCryptoWish</h3></div>
                         <Navbar className="ml-left" expand="xxl">
-                            <div id="brand"><Navbar.Brand id="nav-brand"><h3>MyCryptoWish</h3></Navbar.Brand></div>
+                            <div id="brand"><Navbar.Brand id="nav-brand"><h3></h3></Navbar.Brand></div>
                             <Nav.Link className="nav-item">About</Nav.Link>
                             <Nav.Link className="nav-item">Team</Nav.Link>
                             <Nav.Link className="nav-item">Purchase</Nav.Link>
@@ -18,11 +19,13 @@ class AboutPage extends Component{
                         </Navbar>
                     </div>
                     <div className="container" id="progress">
+                        
                         <ProgressBar></ProgressBar>
+                        <div className="progress-amount"><h3>  100 Eth</h3></div>
                     </div>
                     <div className="container" id="brief">
                         <div className="brief-p"> 
-                            <h3><b>Your Wish Is My Command</b></h3>                 
+                            <h3 className="section-heading"><b><i>Your Wish Is My Command</i></b></h3>               
                             <p>
                             I am not a genie nor a god, so I cannot guarantee that your personal wish comes true. 
                             What I can guarantee is that by purchasing a MyCryptoWish NFT,
@@ -78,7 +81,17 @@ class AboutPage extends Component{
                                 </ul>
                             </div>
                         </div>
-                        <div className="team-img"></div>
+                        <div className="team-img-container">
+                            <div className="top-container">
+                                <div className="team-img-top"></div>
+                            </div>
+                            <div className="bottom-container">
+                                <div className="team-img-bottom"></div>
+                                <div className="team-img-bottom"></div>
+                            </div>
+
+                        </div>
+                        
                     </div>
                     <div className="container" id="about">
                     </div>
@@ -92,7 +105,7 @@ class AboutPage extends Component{
                                             <li><b>Step 2:</b> Install Metamask (On supported Browser)</li>
                                             <li><b>Step 3:</b> Find Your Wallet Secret</li>
                                             <li><b>Step 4:</b> Load Your Wallet Secret Into Metamask</li>
-                                            <li><b>Make your wish!</b></li>
+                                            <li><b>Step 5:</b> Make your wish!</li>
                                             
                                         </ul>
                                     </div>
