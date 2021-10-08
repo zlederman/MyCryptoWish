@@ -14,7 +14,6 @@ contract PaymentHandler is PaymentSplitter {
     uint256 constant PRICE = 3000000000000000000 wei;
     event fundsAccepted(address from);
     uint256 totalSales;
-
     
     /*
         Need to add values to the following variables
@@ -43,8 +42,7 @@ contract PaymentHandler is PaymentSplitter {
 
 
     function buyToken(
-        address beneficiary,
-        string calldata tokenParams
+        address beneficiary
     )
     public
     payable
@@ -54,7 +52,7 @@ contract PaymentHandler is PaymentSplitter {
         require(beneficiary != address(0),"Invalid Address");
     
         // validateTokenParams(tokenParams);
-        bool success = processPurchase(beneficiary, tokenParams);
+        bool success = processPurchase(beneficiary);
         require(success,"Token Not Minted Error");
         releaseEther();
         totalSales +=1;
@@ -95,11 +93,11 @@ contract PaymentHandler is PaymentSplitter {
     }
 
 
-    function processPurchase(address beneficiary, string calldata tokenParams) internal returns(bool) {
+    function processPurchase(address beneficiary) internal returns(bool) {
 
-        bool success = _myWishContract.createCollectable(beneficiary,tokenParams);
+        bool success = _myWishContract.createCollectable(beneficiary);
         require(success,"Token Contract Did Not Mint Token");
-        emit tokenMintedEvent(beneficiary, tokenParams);
+
         return success == true;
     }
 
