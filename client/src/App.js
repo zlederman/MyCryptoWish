@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import CardFooter from "./components/CardFooter"
 import NightSky from "./components/NightSky"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import SimpleTokenContract from "./contracts/SimpleToken.json";
+import SimpleTokenContract from "./contracts/MyWish.json";
 import PaymentHandlerContract from "./contracts/PaymentHandler.json";
 import getWeb3 from "./getWeb3";
 import AboutPage from "./components/about";
@@ -25,10 +25,10 @@ class App extends Component {
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleTokenContract.networks[networkId];
-      // const deployedNetworkPayment = PaymentHandlerContract.networks[networkId];
+ 
+      const deployedNetwork = PaymentHandlerContract.networks[networkId];
       const instance = new web3.eth.Contract(
-          SimpleTokenContract.abi,
+          PaymentHandlerContract.abi,
           deployedNetwork && deployedNetwork.address,
       );
       this.state.contract = instance
@@ -52,15 +52,10 @@ class App extends Component {
   };
   execPayment = async () => {
       const {accounts, contract } = this.state;
-      var price = await contract.methods.getPrice().call();
-      
-      contract.methods.sendEther().send({},{from: accounts[0], gas: 3000000, value: price})
-      .then((err,receipt) =>{
-      // this.runExampleNFT()
-      });
+      console.log(contract.methods)
+      const res = await contract.methods.buyToken().send({from: accounts[0],gas:300000, value: 3000000000000000000})
+      console.log(res)
 
-      const response = await contract.methods.getBalanceOfPaymentHandler().call();
-      // this.setState({storageValue : [...this.state.storageValue, response]})
   };
 
   onClickHide = () => {

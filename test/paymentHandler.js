@@ -30,6 +30,18 @@ contract("paymentHandler", accounts => {
       assert.equal(true,success,"Name error")
     })
 
+    it("should mint nft",async () =>{
+      const tokenInstance = await wishToken.deployed()
+      const ppl = [accounts[0],accounts[1],accounts[2],accounts[3]]
+      
+      const paymentHandlerInstance = await paymentHandler.deployed()
+   
+      await tokenInstance.setMinterRole(paymentHandlerInstance.address,{from:accounts[4]});
+      const res = await paymentHandlerInstance.buyToken.sendTransaction({from: accounts[0],gas:300000, value: 3000000000000000000})
+      console.log(res)
+    })
+    
+
   });
 
 

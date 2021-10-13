@@ -41,20 +41,17 @@ contract PaymentHandler is PaymentSplitter {
     }
 
 
-    function buyToken(
-        address beneficiary
-    )
+    function buyToken()
     public
     payable
     {
         require(msg.value > 0 , "Zero Funds Sent Error");
-        require(msg.value > PRICE,"Not Enough Funds Sent Error");
-        require(beneficiary != address(0),"Invalid Address");
-    
-        // validateTokenParams(tokenParams);
-        bool success = processPurchase(beneficiary);
+        require(msg.value == PRICE,"Value Sent Error");
+        require(msg.sender != address(0),"Invalid Address");
+
+        bool success = processPurchase(msg.sender);
         require(success,"Token Not Minted Error");
-        releaseEther();
+        // releaseEther();
         totalSales +=1;
 
 

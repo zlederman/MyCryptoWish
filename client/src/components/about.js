@@ -8,22 +8,26 @@ class AboutPage extends Component{
         return(
                 <div className="container" id="page">
                     <div className="container" id="nav">
-                        <div><h3>MyCryptoWish</h3></div>
-                        <Navbar className="ml-left" expand="xxl">
-                            <div id="brand"><Navbar.Brand id="nav-brand"><h3></h3></Navbar.Brand></div>
-                            <Nav.Link className="nav-item">About</Nav.Link>
-                            <Nav.Link className="nav-item">Team</Nav.Link>
-                            <Nav.Link className="nav-item">Purchase</Nav.Link>
-                            <Nav.Link className="nav-item">Provenance</Nav.Link>
-                            <Nav.Link className="nav-item">Gallery</Nav.Link>
+
+                        <Navbar className="ml-left " expand="xxl">
+                      
+                            <Nav.Link className="nav-item"><h3>About</h3></Nav.Link>
+                            <Nav.Link className="nav-item"><h3>Team</h3></Nav.Link>
+                            <Nav.Link className="nav-item"><h3>Purchase</h3></Nav.Link>
+                            <Nav.Link className="nav-item"><h3>Provenance</h3></Nav.Link>
+                            <Nav.Link className="nav-item"><h3>Gallery</h3></Nav.Link>
                         </Navbar>
                     </div>
+                    
                     <div className="container" id="progress">
                         
+                        
                         <ProgressBar></ProgressBar>
-                        <div className="progress-amount"><h3>  100 Eth</h3></div>
+        
                     </div>
+                   
                     <div className="container" id="brief">
+                        
                         <div className="brief-p"> 
                             <h3 className="section-heading"><b><i>Your Wish Is My Command</i></b></h3>               
                             <p>
@@ -49,7 +53,9 @@ class AboutPage extends Component{
                             </Figure>
                             </div>
                         </div>
+                        
                     </div>
+                    <div className="container line"></div>
                     <div className="container" id="team">
                         <div className="team-text">
                             <div className="heading team" >
@@ -93,6 +99,7 @@ class AboutPage extends Component{
                         </div>
                         
                     </div>
+                    <div className="container line"></div>
                     <div className="container" id="about">
                     </div>
                     <div className="container" id="purchase-guide">
@@ -120,6 +127,7 @@ class AboutPage extends Component{
                             </div>
                         </div>
                     </div>
+                    <div className="container line"></div>
                     <div className="container" id="provenance">
                     </div>
                     <div className="container" id="gallery">
