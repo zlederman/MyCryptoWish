@@ -25,8 +25,6 @@ contract MyWish is AccessControl, ERC721Enumerable{
     bool internal saleIsActive = false; 
     uint256 public constant _maxPurchaseAllowed = 20; 
 
-
-    mapping(address => uint256)public getTokenId;
     mapping(address => uint256)public balances;
     string  __name = "MyWish";
     string _baseURIextended = 'WE NEED IPFS';
@@ -63,26 +61,17 @@ contract MyWish is AccessControl, ERC721Enumerable{
     }
 
     function createCollectable(address to) public onlyRole(MINTER_ROLE)  returns(bool) {
-        require(saleIsActive, "Sale is no longer active");
         require(totalSupply() < _totalWishes, "Sale is over, all collectables sold."); //Might not need this one
-        require(SafeMath.add(totalSupply(), 1) <= _totalWishes, "Sale is almost over, wishes are running low. Please purchase less wishes.");
         safeMint(to, _tokenId.current());
         _tokenId.increment();
-
         return true;
         
     }
 
     function safeMint(address to, uint256 tokenId) private {
         _safeMint(to, tokenId);
-        getTokenId[to] = tokenId;
-        balances[to] += 1;
-
     }
 
-    // function flipStateOfSale() public view onlyOwner { //not sure if I need view
-    //     saleIsActive != saleIsActive; 
-    // }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) 
         internal 
@@ -105,8 +94,6 @@ contract MyWish is AccessControl, ERC721Enumerable{
         super._burn(tokenId);
     }
 
-
-    
 
     function setMinterRole(address minter) public onlyRole(DEFAULT_ADMIN_ROLE) {
         require(minter != address(0),"Please Enter Valid Address");
