@@ -2,8 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -22,7 +20,6 @@ contract MyWish is AccessControl, ERC721Enumerable{
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BASEURI_ROLE = keccak256("BASEURI_ROLE");
     uint256 public constant _totalWishes = 10000; 
-    bool internal saleIsActive = false; 
     uint256 public constant _maxPurchaseAllowed = 20; 
 
     mapping(address => uint256)public balances;
@@ -63,8 +60,9 @@ contract MyWish is AccessControl, ERC721Enumerable{
     function createCollectable(address to) public onlyRole(MINTER_ROLE)  returns(bool) {
         require(totalSupply() < _totalWishes, "Sale is over, all collectables sold."); //Might not need this one
         safeMint(to, _tokenId.current());
+        bool success = ownerOf(_tokenId.current()) == to;
         _tokenId.increment();
-        return true;
+        return success;
         
     }
 
