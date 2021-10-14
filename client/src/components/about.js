@@ -29,7 +29,7 @@ class AboutPage extends Component{
                     <div className="container" id="brief">
                         
                         <div className="brief-p"> 
-                            <h3 className="section-heading"><b><i>Your Wish Is My Command</i></b></h3>               
+                            <h2 className="section-heading"><b><i>Your Wish Is My Command</i></b></h2>               
                             <p>
                             I am not a genie nor a god, so I cannot guarantee that your personal wish comes true. 
                             What I can guarantee is that by purchasing a MyCryptoWish NFT,
@@ -55,18 +55,17 @@ class AboutPage extends Component{
                         </div>
                         
                     </div>
-                    <div className="container line"></div>
                     <div className="container" id="team">
                         <div className="team-text">
                             <div className="heading team" >
-                                <h3 className="section-heading"><b><i>The Team</i></b></h3>
+                                <h2 className="section-heading"><b><i>The Team</i></b></h2>
                             </div>
                             <div className="underline" id="team"></div>
                             <div className="sub-heading team" id="team">
                                 <h5><b><i>Three college kids wanting to<br>
                                 </br> learn more about NFTs and give back</i></b></h5>
                             </div>
-                            <div id="desc">
+                            <div id="description">
                                 <ul id="members-list">
                                     <li>
                                         <div>
@@ -105,7 +104,7 @@ class AboutPage extends Component{
                     <div className="container" id="purchase-guide">
                         <div className="purchase-text">
                             <div className="heading purchase" >
-                                    <h3 className="section-heading"><b><i>Purchase Guide</i></b></h3>
+                                    <h2 className="section-heading"><b><i>Purchase Guide</i></b></h2>
                                     <div>
                                         <ul id="purchase-steps">
                                             <li><b>Step 1:</b> Acquire Ethereum! (0.3 ETH) to make a wish</li>
