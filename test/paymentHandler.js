@@ -40,23 +40,23 @@ contract("paymentHandler", accounts => {
     it("should increase balances", async() =>{
       const paymentHandlerInstance = await paymentHandler.deployed();
       price = 3000000000000000000;
+      
       const ppl = Array(4);
       const balances = Array(4);
       const balancesNew = Array(4);
       for(let i = 0; i < 4; i++){
         ppl[i] = await paymentHandlerInstance.payee.call(i);
-        balances[i] =  await web3.eth.getBalance(ppl[i]);
+        balances[i] =  parseInt(await web3.eth.getBalance(ppl[i]));
       } 
-      console.log(balances)
+     
       const res = await paymentHandlerInstance.buyToken.sendTransaction({from: accounts[4],gas:3000000, value: 3000000000000000000});
       for(let i = 0; i<  4; i++){
-        balancesNew[i] =  await web3.eth.getBalance(ppl[i]);
+        balancesNew[i] =  parseInt(await web3.eth.getBalance(ppl[i]));
       }
-      console.log(balancesNew)
-      assert.equal(balancesNew[0],balances[0] + price*0.02,"incorrect amount added Zach");
-      assert.equal(balancesNew[1],balances[1] + price*0.02,"incorrect amount added Seb ");
-      assert.equal(balancesNew[2],balances[2] + price*0.06,"incorrect amount added Evan");
-      assert.equal(balancesNew[3],balances[3] + price*0.9,"incorrect amount added Make A Wish");
+      assert.equal(balancesNew[0],balances[0] + (price*0.02),"incorrect amount added Zach");
+      assert.equal(balancesNew[1],balances[1] + (price*0.02),"incorrect amount added Seb ");
+      assert.equal(balancesNew[2],balances[2] + (price*0.06),"incorrect amount added Evan");
+      assert.equal(balancesNew[3],balances[3] + (price*0.9),"incorrect amount added Make A Wish");
     })
     
 
