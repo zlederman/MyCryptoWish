@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "./MyWish.sol";
 
 //Need to set up ownable for contract
@@ -14,30 +13,32 @@ contract PaymentHandler is PaymentSplitter {
     uint256 constant PRICE = 3000000000000000000 wei;
     event fundsAccepted(address from);
     uint256 totalSales;
+    bool saleIsActive = true;
     
     /*
         Need to add values to the following variables
     */
-    MyWish _myWishContract; 
-    address payable _Seb = payable(address(30));
-    address payable _Zach = payable(address(10));
-    address payable _Evan = payable(address(16)); 
-    address payable _MakeAWish = payable(address(20));  
+    MyWish _myWishContract;
+
+    uint16 zachIndex = 0;
+    uint16 evanIndex = 2;
+    uint16 sebIndex = 1;
+    uint16 wishIndex = 3;
 
     //Make Shares out of 100
-    uint256 _SebShares = 2;
-    uint256 _ZachShares = 2;
-    uint256 _EvanShares = 6;
-    uint256 _MakeAWishShares = 90;
+    uint16 _SebShares = 2;
+    uint16 _ZachShares = 2;
+    uint16 _EvanShares = 6;
+    uint16 _MakeAWishShares = 90;
+    address makeAWish = address(0);
 
-    // address[] payees = [_Seb, _Zach, _Evan, _MakeAWish];
     uint256[] shares_ = [_SebShares, _ZachShares, _EvanShares, _MakeAWishShares];
 
-    event tokenMintedEvent(address beneficiary,string tokenParams);
 
     constructor(address tokenAddress,address[] memory payees) PaymentSplitter(payees, shares_) {
         _myWishContract = MyWish(tokenAddress);
         totalSales = 0;
+        makeAWish = payees[3];
     }
 
 
@@ -45,13 +46,14 @@ contract PaymentHandler is PaymentSplitter {
     public
     payable
     {
+        require(saleIsActive,"Sale is not active!");
         require(msg.value > 0 , "Zero Funds Sent Error");
         require(msg.value == PRICE,"Value Sent Error");
         require(msg.sender != address(0),"Invalid Address");
 
         bool success = processPurchase(msg.sender);
         require(success,"Token Not Minted Error");
-        // releaseEther();
+        releaseEther();
         totalSales +=1;
 
 
@@ -78,15 +80,20 @@ contract PaymentHandler is PaymentSplitter {
     }
   
     function releaseEther() internal {
-        require(_Seb !=  address(0), "Address of Seb is not set");
-        require(_Zach != address(0), "Address of Zach is not set");
-        require(_Evan != address(0), "Address of Evan is not set");
-        require(_MakeAWish != address(0), "Address of Make A Wish is not set");
+        address payable zach = payable(payee(zachIndex));
+        address payable evan = payable(payee(evanIndex));
+        address payable seb = payable(payee(sebIndex));
+        address payable wish = payable(payee(wishIndex));
+
+        require(seb !=  address(0), "Address of Seb is not set");
+        require(zach != address(0), "Address of Zach is not set");
+        require(evan != address(0), "Address of Evan is not set");
+        require(wish != address(0), "Address of Make A Wish is not set");
         
-        release(_Seb);
-        release(_Zach); 
-        release(_Evan); 
-        release(_MakeAWish);
+        release(zach);
+        release(wish); 
+        release(evan); 
+        release(seb);
     }
 
 

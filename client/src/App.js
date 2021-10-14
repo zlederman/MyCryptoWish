@@ -47,9 +47,6 @@ class App extends Component {
       console.log("yo")
   };
 
-  getRandomInt = (max) => {
-      return Math.floor(Math.random() * max);
-  };
   execPayment = async () => {
       const {accounts, contract } = this.state;
       console.log(contract.methods)
