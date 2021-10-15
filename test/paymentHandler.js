@@ -58,6 +58,10 @@ contract("paymentHandler", accounts => {
       assert.equal(balancesNew[2],balances[2] + (price*0.06),"incorrect amount added Evan");
       assert.equal(balancesNew[3],balances[3] + (price*0.9),"incorrect amount added Make A Wish");
     })
+
+    it("should add user to raffle", async() =>{
+      
+    })
     
 
   });
