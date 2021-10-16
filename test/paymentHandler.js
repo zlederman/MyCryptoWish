@@ -8,7 +8,7 @@ contract("paymentHandler", accounts => {
       const ppl = [accounts[0],accounts[1],accounts[2],accounts[3]]
       const paymentHandlerInstance = await paymentHandler.deployed();
       const value = await paymentHandlerInstance.getPrice.call();
-      assert.equal(value,3000000000000000000,"contract method doesnt work");
+      assert.equal(value,30000000000000000,"contract method doesnt work");
     });
     it("should get Token contract address",async() =>{
       const tokenInstance = await wishToken.deployed()
@@ -20,13 +20,8 @@ contract("paymentHandler", accounts => {
     })
     it("should only allow minter role ",async() =>{
       const tokenInstance = await wishToken.deployed()
-      const ppl = [accounts[0],accounts[1],accounts[2],accounts[3]]
-      
       const paymentHandlerInstance = await paymentHandler.deployed()
-      console.log(paymentHandlerInstance.address)
-      await tokenInstance.setMinterRole(paymentHandlerInstance.address,{from:accounts[4]});
       const success = await tokenInstance.getRole.call({from:paymentHandlerInstance.address})
-
       assert.equal(true,success,"Name error")
     })
 
@@ -55,9 +50,9 @@ contract("paymentHandler", accounts => {
 
     it("should add user to raffle", async() =>{
       const paymentHandlerInstance = await paymentHandler.deployed();
-      const requester = accounts[11];
+      const requester = accounts[5];
       const quantity = 1;
-      const price = 3000000000000000000;
+      const price = 30000000000000000;
       await paymentHandlerInstance.enterRaffle.sendTransaction(quantity,{from:requester, gas: 300000, value: price*quantity})
       const num_tickets = await paymentHandlerInstance.getTokensRequested.call(requester);
       assert.equal(num_tickets,quantity,"No tickets were added");
@@ -67,7 +62,7 @@ contract("paymentHandler", accounts => {
       const paymentHandlerInstance = await paymentHandler.deployed();
       const requester = accounts[5];
       const quantity = 7;
-      const price = 3000000000000000000;
+      const price = 30000000000000000;
       og_balance = parseInt(await web3.eth.getBalance(requester));
 
       await paymentHandlerInstance.enterRaffle.sendTransaction(quantity,{from:requester, gas: 300000, value: price*quantity})
@@ -82,7 +77,7 @@ contract("paymentHandler", accounts => {
       const requester = accounts[5];
       og_balance = parseInt(await web3.eth.getBalance(requester));
       const quantity = 7;
-      const price = 3000000000000000000;
+      const price = 30000000000000000;
       await paymentHandlerInstance.enterRaffle.sendTransaction(quantity,{from:requester, gas: 300000, value: price * (quantity - 1)})
       const num_tickets = await paymentHandlerInstance.getTokensRequested.call(requester);
       const after_balance = parseInt(await web3.eth.getBalance(requester));

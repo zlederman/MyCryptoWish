@@ -26,7 +26,7 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
     uint16 immutable sebIndex = 1;
     uint16 immutable wishIndex = 3;
 
-    uint256 immutable PRICE = 3000000000000000000 wei;
+    uint256 immutable PRICE = 30000000000000000 wei;
     uint64 immutable TOKEN_CAP = 10000;
     uint16 immutable USER_TOKEN_CAP = 5;
 
