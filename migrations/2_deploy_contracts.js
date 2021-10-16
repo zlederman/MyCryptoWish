@@ -3,10 +3,21 @@ var paymentHandler = artifacts.require("./PaymentHandler");
 
 module.exports = async function(deployer,network,accounts) {
   const ppl = [accounts[0],accounts[1],accounts[2],accounts[3]];
-  await deployer.deploy(myWish,{from: accounts[4]});
+  await deployer.deploy(myWish);
   const myWishInstance = await myWish.deployed();
-  await deployer.deploy(paymentHandler,myWishInstance.address,ppl);
+  const _LINK_ADDRESS  = '0xa36085F69e2889c224210F603D836748e7dC0088';
+  const VRFCOORDINATOR = '0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9';
+  const KEYHASH = '0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4';
+  await deployer.deploy(
+    paymentHandler,
+    myWishInstance.address,
+    ppl,
+    KEYHASH,
+    _LINK_ADDRESS,
+    VRFCOORDINATOR
+  );
+
   const paymentHandlerInstance = await paymentHandler.deployed()
-  await myWishInstance.setMinterRole(paymentHandlerInstance.address,{from:accounts[4]});
+  await myWishInstance.setMinterRole(paymentHandlerInstance.address);
 };
 
