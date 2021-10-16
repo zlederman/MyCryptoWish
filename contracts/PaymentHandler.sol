@@ -2,14 +2,24 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
+import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./MyWish.sol";
 
 //Need to set up ownable for contract
 //Need to create reserve function
 
-contract PaymentHandler is PaymentSplitter{
+contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
 
     using Counters for Counters.Counter; 
+
+
+    uint256 public randomnessOutput;
+    bytes32 public requestId;
+
+    IERC20 public immutable LINK_TOKEN;
+    bytes32 internal immutable KEY_HASH;
+    
 
     uint16 immutable zachIndex = 0;
     uint16 immutable evanIndex = 2;
@@ -21,14 +31,15 @@ contract PaymentHandler is PaymentSplitter{
     uint16 immutable USER_TOKEN_CAP = 5;
 
     bool raffleIsActive = true;
-    bool saleIsActive = true;
+    bool mintingIsActive = false;
+    bool raffleIsShuffled = false;
     bool entropySet = false;
 
     Counters.Counter private raffleCount;       
 
     MyWish _myWishContract;
 
-    //Make Shares out of 100
+    
     uint16 sebShares = 2;
     uint16 zachShares = 2;
     uint16 evanShares = 6;
@@ -39,34 +50,29 @@ contract PaymentHandler is PaymentSplitter{
     uint256[] shares_ = [sebShares, zachShares, evanShares, makeAWishShares];
 
     mapping(address => uint16) tokensPerUser;
+    mapping(uint16 => bool) ticketsClaimed;
     address[] raffleEntries;
     
     event fundsAccepted(address from);
     event enteredRaffle(address from ,uint16 numTokens);
     event raffleShuffled(uint256 totalEntries);
+    event ticketsRedeemed(address user, uint16 winningTicketCount);
 
-    constructor(address tokenAddress,address[] memory payees) PaymentSplitter(payees, shares_) {
+    constructor(
+        address tokenAddress,
+        address[] memory payees,
+        bytes32 _LINK_KEY_HASH,
+        address _LINK_ADDRESS,
+        address _LINK_VRF_COORDINATOR_ADDRESS
+       ) 
+       PaymentSplitter(payees, shares_)
+       VRFConsumerBase(_LINK_VRF_COORDINATOR_ADDRESS, _LINK_ADDRESS)
+    {
+        LINK_TOKEN = IERC20(_LINK_ADDRESS);
+        KEY_HASH = _LINK_KEY_HASH;
         _myWishContract = MyWish(tokenAddress);
         makeAWish = payees[3];
     }
-
-
-    function buyToken()
-    public
-    payable
-    {
-        require(saleIsActive,"Sale is not active!");
-        require(msg.value > 0 , "Zero Funds Sent Error");
-        require(msg.value == PRICE,"Value Sent Error");
-        require(msg.sender != address(0),"Invalid Address");
-
-        bool success = _myWishContract.createCollectable(msg.sender);
-        require(success,"Token Not Minted Error");
-        releaseEther();
-
-    }
-
-
 
     function enterRaffle(uint16 numTokens)
     public 
@@ -80,8 +86,9 @@ contract PaymentHandler is PaymentSplitter{
         tokensPerUser[msg.sender] += numTokens;
         for(uint i = 0; i < numTokens; i++){
             raffleCount.increment();
+            raffleEntries.push(msg.sender);
         }
-        raffleEntries.push(msg.sender);
+        
         emit enteredRaffle(msg.sender, numTokens);
 
     }
@@ -101,9 +108,61 @@ contract PaymentHandler is PaymentSplitter{
             // Update the current value to the value at the random index
             raffleEntries[i] = randomTmp;
         }
+
+        raffleIsShuffled = true;
         emit raffleShuffled(raffleEntries.length);
 
     }
+
+    function setEntropy() public {
+
+        require(!raffleIsActive,'raffle is still active');
+        require(!entropySet,'Entropy is already set, no need');
+        
+        requestRandomness(KEY_HASH, 2e18);
+
+    }
+    function isWinner(uint16[] calldata tickets) public { 
+        require(!raffleIsActive,"Raffle must be over to get your token");
+        require(mintingIsActive,"Minting state needs to be active");
+        require(raffleEntries.length > TOKEN_CAP, "Everybody is a winner");
+        if(raffleEntries.length > TOKEN_CAP) {
+            require(raffleIsShuffled,"please shuffle winners before minting");
+        }
+
+        uint16 winningTicketCount = 0;
+        for(uint i = 0; i < tickets.length; i++){
+            require(tickets[i] < raffleEntries.length,"Not a valid ticket");
+            require(!ticketsClaimed[tickets[i]],"Tickets have already been claimed");
+            require(raffleEntries[tickets[i]] == msg.sender, "Not the owner of this tickets");
+
+            ticketsClaimed[tickets[i]] = true;
+
+            if(tickets[i] < TOKEN_CAP){
+                bool success = _myWishContract.createCollectable(msg.sender);
+                require(success,"Something happended");
+                winningTicketCount += 1;
+            }
+     
+        }
+        if(winningTicketCount < tickets.length){
+            (bool sent, ) = payable(msg.sender).call{
+                value: (tickets.length - winningTicketCount) * PRICE
+            }("");
+        }
+
+        emit ticketsRedeemed(msg.sender, winningTicketCount);
+
+
+    }
+
+    function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
+        require(raffleEntries.length > TOKEN_CAP, "No need to shuffle addresses");
+        require(!entropySet,"entropy already set");
+        entropy = randomness;
+        entropySet = true;
+    }
+
 
 
 
@@ -138,8 +197,6 @@ contract PaymentHandler is PaymentSplitter{
     }
 
 
-
-
     function getTokensRequested(address user) public view returns(uint16) {
         require(user != address(0),"invalid address");
         require(tokensPerUser[user] > 0, "No Tokens Requested");
@@ -150,6 +207,8 @@ contract PaymentHandler is PaymentSplitter{
     function getPrice() public pure returns(uint256){
         return PRICE;
     }
+
+
 
 
 
