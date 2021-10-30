@@ -8,7 +8,9 @@ import getWeb3 from "./getWeb3";
 import AboutPage from "./components/about";
 import {Button} from "react-bootstrap"
 import "./App.css";
+
 import WishView from "./components/WishFrame";
+import RafflePage from "./components/rafflepage/rafflepage"
 
 
 class App extends Component {
@@ -47,6 +49,11 @@ class App extends Component {
       console.log("yo")
   };
 
+  verifyBalance = async() => {
+    const {web3, accounts,contract} = this.state;
+    
+  }
+  
   execPayment = async () => {
       const {accounts, contract } = this.state;
       console.log(contract.methods)
@@ -61,10 +68,14 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div>
+        {/* <div>
         <NightSky></NightSky>
         {this.state.hidden ? <WishView handleClick= {this.execPayment.bind(this)}/> : <AboutPage/>}
         <CardFooter handleClick={this.onClickHide.bind(this)}></CardFooter>  
+        </div> */}
+        <div>
+          <RafflePage/>
+          <AboutPage/>
         </div>
       </div>
     );

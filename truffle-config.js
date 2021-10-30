@@ -16,7 +16,6 @@ module.exports = {
       provider: () => {
           return new HDWalletProvider(process.env.MNEMONIC_REAL, process.env.RPC_URL);
       },
-
       network_id: '*'
     }
   }
