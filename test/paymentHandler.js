@@ -83,9 +83,9 @@ contract("paymentHandler", accounts => {
       const after_balance = parseInt(await web3.eth.getBalance(requester));
       assert.notEqual(num_tickets,quantity);
       assert.equal(og_balance - 30000,after_balance);
-
     })
 
+    
 
   });
 

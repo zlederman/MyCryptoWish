@@ -1,0 +1,162 @@
+.raffle-page {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    height: 100%;
+    width: 100%;
+}
+
+.left-container {
+    width:66%;
+
+    
+    min-height:100%;
+    display: flex;
+    background-color: #7C83FD;
+    flex-direction: column;
+    
+}
+.right-container {
+    width:33%;
+    min-height: 100%;
+    background-color: white ;
+    border-bottom-left-radius: 20% !important;
+
+
+}
+
+.logo {
+    width: 75%;
+    height:auto;
+}
+
+.info-container {
+    padding-top: 3%;
+    font-weight: bolder;
+    text-align: left;
+    padding-left: 3%;
+
+}
+
+.title-container {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    color: white;
+    width: 40%;
+    align-content: left;
+}
+h1 {
+    font-size: 130%;
+}
+.form-container {
+    margin-top: 8%;
+    width:70%;
+    align-self: center;
+    background-color: white;
+    border-radius: 9px;
+    margin-bottom: 5%;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.11), 0 6px 6px rgba(0,0,0,0.19);
+}
+span {
+    font-weight: 900;
+    font-size: 400%;
+}
+.form-label {
+    padding-left: 5%;
+    text-align: left !important;
+    font-weight: 900 ;
+    
+}
+
+.timer-container {
+    margin-top: 8%;
+    background: white;
+    padding-bottom: 8%;
+    padding-top: 8%;
+    padding-right: 3%;
+    padding-left: 3%;
+    width: 70%;
+    align-self: center;
+    justify-content: center;
+    border-radius: 9px;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.11), 0 6px 6px rgba(0,0,0,0.19);
+    display: flex;
+    flex-direction: row;
+    max-width: 65%;
+    justify-content: space-around;
+
+}
+
+.time-unit {
+    font-weight: bolder;
+}
+.time-container {
+    border-radius: 9px;
+    background-color: #7C83FD;
+    padding-right: 5%;
+    padding-left: 5%;
+    padding-bottom: 5%;
+ }
+
+h3 {
+    font-weight: 900;
+    align-self: left;
+    text-align: left;
+    padding-bottom: 3%;
+}
+.form-group {
+    padding-top: 3%;
+    width:95%;
+    padding-bottom: 8%;
+}
+.btn {
+    margin-bottom: 3%;
+    background-color:#7C83FD ;
+
+}
+
+img{
+    width: 75%;
+    height: auto;
+}
+.twitter-container {
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    width:13%;
+}
+
+.discord-container {
+    padding-top: 5px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    width:13%
+}
+
+.social-container {
+    margin-top: 11%;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    justify-content:space-around;
+  
+   
+}
+
+
+
+.card{
+    background: black;
+    color:white;
+    margin-top: 40%;
+    margin-left: 25%;
+    width: 75%;
+    height: 45%;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.11), 0 6px 6px rgba(0,0,0,0.19);
+}
+.card-img-top {
+    margin-top: 2.5%;
+    margin-left: 2.3%;
+}
+
