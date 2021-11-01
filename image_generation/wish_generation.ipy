@@ -1,0 +1,452 @@
+from PIL import Image
+from IPython.display import display
+import random
+import json
+
+
+background = [
+    "one", 
+    "two",
+    "three"
+]
+
+background_weights = [
+    50, 
+    20, 
+    30
+]
+
+base_star = [
+    "Yellow", 
+    "Albert Einstein", 
+    "Pirate", 
+    "Vampire", 
+    "King", 
+    "Cowboy", 
+    "Soldier", 
+    "Shoorting Star", 
+    "Ninja", 
+    "Mummy", 
+    "Devil", 
+]
+
+base_star_weights = [
+    50, 
+    5, 
+    5, 
+    5, 
+    2.25, 
+    2.25, 
+    10, 
+    7.5, 
+    4.5, 
+    5, 
+    3, 
+]
+
+eyes = [
+    "Buldging", 
+    "Winking", 
+    "Closed", 
+    "Crossed Eyed", 
+    "Normal Open", 
+    "Squinting", 
+    "Rolling Eyes"
+]
+
+eyes_weights = [
+    20, 
+    1.5, 
+    15, 
+    10.5, 
+    30, 
+    2.5, 
+    10.5
+]
+
+mouth = [
+    "Normal", 
+    "Grrr", 
+    "Frown", 
+    "Tongue Out", 
+    "Missing Teeth", 
+    "Lipstick", 
+    "No Teeth",
+    "Big Smile",
+    "Kiss Face", 
+    "Evil Smile"
+]
+
+mouth_weights = [
+    25, 
+    5, 
+    5, 
+    1.5, 
+    1.5, 
+    10, 
+    15,
+    15,
+    12, 
+    10
+] 
+
+glasses = [
+    "Aviators", 
+    "Normal Sunnies", 
+    "Groucho Marx", 
+    "Monocle", 
+    "Scuba Mask", 
+    "Eyepatch", 
+    "Reading Glasses", 
+    "Cucumbers"
+]
+
+glasses_weights = [
+    20, 
+    30, 
+    15, 
+    7, 
+    7, 
+    2.5, 
+    17, 
+    1.5
+]
+
+hat = [
+    "Baseball Cap", 
+    "Crown", 
+    "Bowler", 
+    "Potted Plant", 
+    "Cowboy", 
+    "Beanie", 
+    "Fireman", 
+    "Banana", 
+    "Top Hat", 
+    "Sombrero"
+]
+
+hat_weights = [
+    30, 
+    20, 
+    5, 
+    1.5, 
+    7, 
+    10, 
+    8, 
+    1.5, 
+    10, 
+    7
+]
+
+
+hair = [
+    "Short Hair", 
+    "Long Hair",
+    "Curly Afro", 
+    "Mohawk", 
+    "Pigtails", 
+    "Einstein Crazy", 
+    "Part Down Middle"
+]
+
+hair_weights = [
+    37.5, 
+    20,
+    15, 
+    10, 
+    10, 
+    5, 
+    2.5
+]
+
+facial_hair = [
+    "Handle Bar", 
+    "Goatee", 
+    "Wizard Beard", 
+    "Half Beard", 
+    "Stubble", 
+    "Bushy Mustache", 
+    "Sideburns"
+]
+
+facial_hair_weights = [
+    30, 
+    10, 
+    5, 
+    5, 
+    20, 
+    10, 
+    20
+]
+
+face = [
+    "Covid Mask", 
+    "Masquerade", 
+    "Clown Face", 
+    "makeup", 
+    "V For Vendetta", 
+    "Sleep Mask", 
+    "Goth Makeup"
+]
+
+face_weights = [
+    20, 
+    20, 
+    10, 
+    37, 
+    2.25, 
+    7.5, 
+    3.25
+]
+
+neckwear = [
+    "Bowtie", 
+    "Normal Tie", 
+    "Gold Necklace", 
+    "Diamond Necklace", 
+    "Scarf"
+]
+
+neckwear_weights = [
+    5, 
+    50, 
+    30, 
+    7.5, 
+    7.5
+]
+
+
+
+#Fit these sets to Layers instead
+
+# Create sets of images #
+background_files = {
+    "one" : "bg1",
+    "two" : "bg2",
+    "three" : "bg3"   
+}
+
+base_star_files = {
+    "Yellow" : "bs1", 
+    "Albert Einstein" : "bs2", 
+    "Pirate" : "bs3", 
+    "Vampire" : "bs4", 
+    "King" : "bs5", 
+    "Cowboy" : "bs6", 
+    "Soldier" : "bs7", 
+    "Shoorting Star" : "bs8", 
+    "Ninja" : "bs9", 
+    "Mummy" : "bs10", 
+    "Devil" : "bs11"   
+}
+
+eyes_files = {
+    "Buldging" : "eyes1",
+    "Winking" : "eyes2", 
+    "Closed" : "eyes3", 
+    "Crossed Eyed" : "eyes4", 
+    "Normal Open" : "eyes5", 
+    "Squinting" : "eyes6", 
+    "Rolling Eyes" : "eyes7"
+}
+
+mouth_files = {
+    "Normal" : "mouth1", 
+    "Grrr" : "mouth2", 
+    "Frown" : "mouth3", 
+    "Tongue Out" : "mouth4", 
+    "Missing Teeth" : "mouth5", 
+    "Lipstick" : "mouth6", 
+    "No Teeth" : "mouth7",
+    "Big Smile" : "mouth8",
+    "Kiss Face" : "mouth9", 
+    "Evil Smile" : "mouth10"
+}
+
+glasses_files = {
+    "Aviators" : "glasses1", 
+    "Normal Sunnies" : "glasses2", 
+    "Groucho Marx" : "glasses3", 
+    "Monocle" : "glasses4", 
+    "Scuba Mask" : "glasses5", 
+    "Eyepatch" : "glasses6", 
+    "Reading Glasses" : "glasses7", 
+    "Cucumbers" : "glasses8"
+}
+
+hat_files = {
+    "Baseball Cap" : "hats1",
+    "Crown" : "hats2".
+    "Bowler" : "hats3", 
+    "Potted Plant" : "hats4", 
+    "Cowboy" : "hats5", 
+    "Beanie" : "hats6", 
+    "Fireman" : "hats7", 
+    "Banana" : "hats8", 
+    "Top Hat" : "hats9", 
+    "Sombrero" : "hats10"
+}
+
+hair_files = {
+    "Short Hair" : "hair1", 
+    "Long Hair" : "hair2",
+    "Curly Afro" : "hair3", 
+    "Mohawk" : "hair4", 
+    "Pigtails" : "hair5", 
+    "Einstein Crazy" : "hair6", 
+    "Part Down Middle" : "hair7"    
+}
+
+facial_hair_files = {
+    "Handle Bar" : "fh1", 
+    "Goatee" : "fh2", 
+    "Wizard Beard" : "fh3", 
+    "Half Beard" : "fh4", 
+    "Stubble" : "fh5", 
+    "Bushy Mustache" : "fh6", 
+    "Sideburns" : "fh7"
+}
+
+face_files = {
+    "Covid Mask" : "face1", 
+    "Masquerade" : "face2", 
+    "Clown Face" : "face3", 
+    "makeup" : "face4", 
+    "V For Vendetta" : "face5", 
+    "Sleep Mask" : "face6", 
+    "Goth Makeup" : "face7"
+}
+
+neckwear_files = {
+    "Bowtie" : "neckwear1", 
+    "Normal Tie" : "neckwear2", 
+    "Gold Necklace" : "neckwear3", 
+    "Diamond Necklace" : "neckwear4", 
+    "Scarf" : "neckwear5"
+}
+
+#Trait Generation
+TOTAL_STARS = 10000
+
+traitsArr = []
+
+
+
+def createTraits(): 
+    trait = {}
+    
+    trait["Background"] = random.choices(background, background_weights)[0]
+    trait["Base_star"] = random.choices(base_star, base_star_weights)[0]
+    
+    #Layer 1: mouth & beard
+    layer1 = random.randint(0, 9)
+    if layer1 <= 3: #mouth 
+        trait["mouth"] = random.choices(mouth, mouth_weights)[0]
+    elif layer1 > 3 & layer1 <= 7: #beard
+        trait["facial_hair"] = random.choices(facial_hair, face_weights)[0]
+    else: #mounth & beard
+        trait["mouth"] = random.choices(mouth, mouth_weights)[0]
+        trait["facial_hair"] = random.choices(facial_hair, face_weights)[0]
+
+    #Layer 2: sunnies & eyes
+    layer2 = random.randint(0, 9)
+    if layer2 <= 3: #eyes 
+        trait["eyes"] = random.choices(eyes, eyes_weights)[0]
+    elif layer2 > 3 & layer2 <= 7: #sunnies
+        trait["glasses"] = random.choices(glasses, glasses_weights)[0]
+    #else: #eyes & sunnies
+        trait["eyes"] = random.choices(eyes, eyes_weights)[0]
+        trait["glasses"] = random.choices(glasses, glasses_weights)[0]
+
+    #Layer3: hair and hats
+    if random.choice("hair", "hat") == "hat":
+        trait["hat"] = random.choices(hat, hat_weights)[0]
+    else: 
+        trait["hair"] = random.choices(hair, hair_weights)[0]
+
+    #1. NEED TO SEE WHAT THE MAKEUP IS GOING TO LOOK LIKE 
+    #2. NEED TO SEE WHAT THE NECKWEAR IS GOING TO LOOK LIKE
+
+    if trait in traitsArr: 
+        return createTraits()
+    else: 
+        return trait
+
+
+for i in range(TOTAL_STARS): 
+    newStar = createTraits()
+    traitsArr.append(newStar)
+
+#Layer 3: Mouth and beard and face
+#Layer 4: Eyes and sunglasses 
+#Layer 5: Hats and hair
+#Layer 6: Neckwear
+
+#Add Token Ids to Json 
+i = 0
+for item in traitsArr
+    item["tokenId"] = i 
+    i = i + 1
+
+
+#Create Image 
+for item in traitsArr
+    layers = {}
+
+    layer1 = Image.open(f'./Backgrounds/{background_files[item["Background"]]}.png').convert('RGBA')
+    layer2 = Image.open(f'./Base_Star/{base_star_files[item["Base_Star"]]}.png').convert('RGBA') 
+
+    if item.get("mouth", null) != null :
+        layers["mouth"] = Image.open(f'./mouth/{layer3[item["mouth"]]}.png').convert('RGBA')
+    if item.get("facial_hair", null) != null :
+        layers["facial_hair"] = Image.open(f'./facial_hair/{layer3[item["facial_hair"]]}.png').convert('RGBA')
+    if item.get("eyes", null) != null :
+        layers["eyes"] = Image.open(f'./eyes/{layer4[item["eyes"]]}.png').convert('RGBA')
+    if item.get("glasses", null) != null :
+        layers["glasses"] = Image.open(f'./glasses/{layer5[item["glasses"]]}.png').convert('RGBA')
+
+    if item.get("hat", null) != null :
+        layers["hat"] = Image.open(f'./hat/{layer5[item["hat"]]}.png').convert('RGBA')
+    else :
+        layers["hair"] = Image.open(f'./hair/{layer5[item["hair"]]}.png').convert('RGBA')   
+
+    if item.get("neckwear", null) != null :
+        layers["neckwear"] = Image.open(f'./neckwear/{layer5[item["neckwear"]]}.png').convert('RGBA')
+    
+    com = Image.alpha_compostie(layer1, layer2)
+    
+    for layer in Layers : 
+        com = Image.alpha_compostie(com, layer)
+
+    rgb_im = com.convert('RGB')
+    file_name = str(item[tokenId] + ".png")
+    rgb_im.save("./output/" + file_name)
+
+
+#with open("finaltraits.json", 'r') as f:
+    #traitsArr = json.load(f)
+
+
+with open("jsonlocation", 'r') as f:
+    hashes = json.load(f)
+    
+for k,v in hashes.items():
+    traits[v]["imageIPFS"] = k
+
+with open ('traitsfinal.json', 'w') as outfile: 
+    json.dump(traitsArr, outfile, indent = 4)
+
+#NOTES
+#Generate all images once and then put them into into IPSF
+
+
+#Option 1
+#could iterate over creating a new set of all the images. 
+#then iterate over the newset to layer the image
+
+#Option 2
+#set values for all of the layers
+
+
+
+
