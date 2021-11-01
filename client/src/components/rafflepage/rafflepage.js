@@ -15,8 +15,9 @@ const RafflePage = (props) => {
                 <div className="title-container">
                     <img className="logo" src={logo}></img>
                 </div>
-                <RaffleForm></RaffleForm>
                 <TimerContainer/>
+                <RaffleForm></RaffleForm>
+
                
             </div>
             <div className="right-container">
@@ -32,7 +33,7 @@ const RafflePage = (props) => {
                 <Card style={{ width: '18rem' }}>
                     <Card.Img variant="top" src={image}/>
                     <Card.Body>
-                        <Card.Title>#acfr43df</Card.Title>
+                        <Card.Title>Wish #acfr43df</Card.Title>
                         <Card.Text>
                             A mystical star with hair so fly, they're in space
                         </Card.Text>

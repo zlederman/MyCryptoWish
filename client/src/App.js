@@ -68,15 +68,16 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {/* <div>
-        <NightSky></NightSky>
-        {this.state.hidden ? <WishView handleClick= {this.execPayment.bind(this)}/> : <AboutPage/>}
-        <CardFooter handleClick={this.onClickHide.bind(this)}></CardFooter>  
-        </div> */}
         <div>
-          <RafflePage/>
-          <AboutPage/>
+        <NightSky></NightSky>
+        
+        {/* {this.state.hidden ? <WishView handleClick= {this.execPayment.bind(this)}/> : <AboutPage/>} */}
+        <CardFooter handleClick={this.onClickHide.bind(this)}></CardFooter>  
         </div>
+        {/* <div>
+          <RafflePage/> 
+          <AboutPage/>
+        </div> */}
       </div>
     );
   }
