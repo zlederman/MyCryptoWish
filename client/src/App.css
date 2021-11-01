@@ -308,15 +308,14 @@ ul#members-list{
   position: relative;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(#7F00FF,#3751e0);
+  background: linear-gradient(#7F00FF,#2B2F77);
   overflow: hidden;
   background-attachment:fixed;
 }
 
-.sky i {
+.sky svg {
   position: absolute;
-  background: #fff;
-  border-radius: 50%;  
+ 
   z-index: 900; 
   animation: animate linear infinite;
 }
@@ -346,6 +345,13 @@ ul#members-list{
   pointer-events:none;
 }
 
+.stars {
+  height: auto;
+  z-index: 902;
+  position: absolute;
+
+}
+
 .well {
   
   animation: glow 2s infinite alternate;;
@@ -372,7 +378,7 @@ ul#members-list{
 }
 
 .cl {
-  width: 30%;
+  width: 27%;
   height: auto;
   z-index: 960;
   position: absolute;
@@ -403,7 +409,7 @@ ul#members-list{
   }
 
   to {
-    filter: drop-shadow(8px 8px 100px rgba(241, 255, 160, 0.88));
+    filter: drop-shadow(8px 8px 100px rgba(241, 255, 160, 0.98));
   }
   
 }

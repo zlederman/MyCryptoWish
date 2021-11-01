@@ -5,6 +5,7 @@ import moon from "../moon.png"
 import cloud1 from "../cloud1.png"
 import cloud2 from "../cloud2.png"
 import cloud3 from "../cloud3.png"
+import stars from "../stars.svg"
 import "../App.css"
 class NightSky extends Component{
     state = {stars: []}
@@ -22,24 +23,38 @@ class NightSky extends Component{
         let x = Math.floor(Math.random() * window.innerWidth);
         let y = Math.floor(Math.random() * window.innerHeight);
         let duration = Math.random() * 10;
-        let size = Math.random() * 2;
-        return React.createElement("i",{
-            key: i,
+        let size = Math.random() *0.05;
+        let size_svg = 10
+        return React.createElement("svg",{
+            className: "svg",
             style:{
                 left: x +"px",
                 top: y + "px",
-                width: 1 + size + "px",
-                height: 1 + size +"px",
+                width: 1 + size_svg + "px",
+                height: 1 + size_svg +"px",
                 animationDuration: 5 + duration+"s",
                 animationDelay: duration+'s',
+                
                
             }
-        });
+           
+        },
+        React.createElement("polygon",
+        {
+            points: "100,10 40,198 190,78 10,78 160,198",
+            fill:"white",
+            style :{
+                transform: `scale(${size})`,
+                height:"auto",
+            }
+        })
+        );
     }
     
     render() {
         return <div className="sky">
             <img  className="background" src={grass}/>
+        
             <img className="moon" src={moon}/>
             <img  className ="cloud-one cl" src={cloud1}/>
             <img  className ="cloud-two cl" src={cloud2}/>
