@@ -85,6 +85,17 @@ contract("paymentHandler", accounts => {
       assert.equal(og_balance - 30000,after_balance);
     })
 
+    it("should be able to mutate paymentHandler State", async () => {
+      const paymentHandlerInstance = await paymentHandler.deployed();
+      const contractState = paymentHandlerInstance.getContractState.call();
+      assert.equal(contractState,1)
+      const success = paymentHandlerInstance.setContractState.sendTransaction(contractState + 1);
+      assert.equal(success,true);
+      const success = paymentHandlerInstance.setContractState.sendTransaction(contractState - 1);
+      assert.equal(success,false);
+      const success = paymentHandlerInstance.setContractState.sendTransaction(contractState + 2)
+      assert.equal(success,true)
+    })
     
 
   });

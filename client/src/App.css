@@ -357,7 +357,7 @@ ul#members-list{
   animation: glow 2s infinite alternate;;
   width: 16%;
   height: auto;
-  position: absolute;
+  position:absolute;
   bottom: 13.9%;
   left: 0;
   z-index: 940;

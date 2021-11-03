@@ -1,11 +1,10 @@
 import React, {Component, useRef} from 'react';
-import grass from "../grass.png"
-import well from "../well.png"
-import moon from "../moon.png"
-import cloud1 from "../cloud1.png"
-import cloud2 from "../cloud2.png"
-import cloud3 from "../cloud3.png"
-import stars from "../stars.svg"
+import grass from "../assets/grass.png"
+import well from "../assets/well.png"
+import moon from "../assets/moon.png"
+import cloud1 from "../assets/cloud1.png"
+import cloud2 from "../assets/cloud2.png"
+import cloud3 from "../assets/cloud3.png"
 import "../App.css"
 class NightSky extends Component{
     state = {stars: []}
