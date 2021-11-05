@@ -10,10 +10,10 @@ class AboutPage extends Component{
                     <div className="container" id="nav">
 
                         <Navbar className="ml-left " expand="xxl">
-                      
-                            <Nav.Link className="nav-item"><h3>About</h3></Nav.Link>
-                            <Nav.Link className="nav-item"><h3>Team</h3></Nav.Link>
-                            <Nav.Link className="nav-item"><h3>Purchase</h3></Nav.Link>
+                        
+                            <Nav.Link href="#brief" className="nav-item"><h3>About</h3></Nav.Link>
+                            <Nav.Link href="#team" className="nav-item"><h3>Team</h3></Nav.Link>
+                            <Nav.Link href="#purchase-guide" className="nav-item"><h3>How To Purchase</h3></Nav.Link>
                             <Nav.Link className="nav-item"><h3>Provenance</h3></Nav.Link>
                             <Nav.Link className="nav-item"><h3>Gallery</h3></Nav.Link>
                         </Navbar>

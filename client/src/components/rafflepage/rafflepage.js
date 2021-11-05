@@ -30,7 +30,7 @@ const RafflePage = (props) => {
                     </div>
                     
                 </div>
-                <Card style={{ width: '18rem' }}>
+                <Card style={{ width: 'auto', height: 'auto', right: '12%'}}>
                     <Card.Img variant="top" src={image}/>
                     <Card.Body>
                         <Card.Title>Wish #acfr43df</Card.Title>
@@ -103,7 +103,8 @@ function TimerContainer() {
     );
   }
   
-
+//<Form.Label column sm={2}>Discord</Form.Label>
+//<Form.Label column sm={2}>Twitter</Form.Label>
 const RaffleForm = (props) => {
     return (
         <div className="form-container">
@@ -113,9 +114,8 @@ const RaffleForm = (props) => {
             </div>
           
             <Form>
-                
                 <Form.Group  as={Row}  controlId="formBasicEmail">
-                    <Form.Label column sm={2}>Discord</Form.Label>
+                    
                     <Col>
                     <Form.Control type="email" placeholder="Discord Username"  />
                     </Col>
@@ -126,7 +126,7 @@ const RaffleForm = (props) => {
                 </Form.Group>
 
                 <Form.Group  as={Row}  controlId="formBasicEmail">
-                    <Form.Label column sm={2}>Twitter</Form.Label>
+                    
                     <Col>
                     <Form.Control type="email" placeholder="Twitter Handle"  />
                     </Col>
