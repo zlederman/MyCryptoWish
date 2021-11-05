@@ -358,10 +358,10 @@ ul#members-list{
 
 .well {
   animation: glow 2s infinite alternate;;
-  width: 30vh;
-  /*height: auto;*/
-  position: absolute;
-  bottom: 11%;
+  width: 16%;
+  height: auto;
+  position:absolute;
+  bottom: 13.9%;
   left: 0;
   z-index: 940;
   right: 0;

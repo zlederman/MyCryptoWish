@@ -13,6 +13,8 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
 
     using Counters for Counters.Counter; 
 
+    enum ContractState{PRESALE,RAFFLE,PREMINT,MINTING,OPEN}
+    ContractState contractState;
 
     uint256 public randomnessOutput;
     bytes32 public requestId;
@@ -30,8 +32,6 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
     uint64 immutable TOKEN_CAP = 10000;
     uint16 immutable USER_TOKEN_CAP = 5;
 
-    bool raffleIsActive = true;
-    bool mintingIsActive = false;
     bool raffleIsShuffled = false;
     bool entropySet = false;
 
@@ -72,14 +72,13 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
         KEY_HASH = _LINK_KEY_HASH;
         _myWishContract = MyWish(tokenAddress);
         makeAWish = payees[3];
+        contractState = ContractState.PRESALE;
     }
 
     function enterRaffle(uint16 numTokens)
-    public 
-    payable
+    public
     {
-        require(raffleIsActive, "Raffle is not active");
-        require(msg.value == numTokens * PRICE,"Not enough ETH sent");
+        require(contractState == ContractState.RAFFLE, "Raffle is not active");
         require(numTokens + raffleCount.current() < TOKEN_CAP,"Please request fewer tokens");
         require(tokensPerUser[msg.sender] + numTokens < USER_TOKEN_CAP,"Please request fewer tokens");
 
@@ -94,7 +93,7 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
     }
     
     function shuffleEntries() public {
-        require(!raffleIsActive,"Raffle Is Still Active");
+        require(contractState == ContractState.PREMINT,"Raffle Is Still Active");
         require(raffleEntries.length > TOKEN_CAP,"No need to shuffle");
         require(entropySet, "No randomness to shuffle with");
 
@@ -116,15 +115,17 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
 
     function setEntropy() public {
 
-        require(!raffleIsActive,'raffle is still active');
+        require(contractState == ContractState.PREMINT,'raffle is still active');
         require(!entropySet,'Entropy is already set, no need');
         
         requestRandomness(KEY_HASH, 2e18);
 
     }
+
+
+
     function isWinner(uint16[] calldata tickets) public { 
-        require(!raffleIsActive,"Raffle must be over to get your token");
-        require(mintingIsActive,"Minting state needs to be active");
+        require(contractState == ContractState.MINTING ,"Minting state needs to be active");
         require(raffleEntries.length > TOKEN_CAP, "Everybody is a winner");
         if(raffleEntries.length > TOKEN_CAP) {
             require(raffleIsShuffled,"please shuffle winners before minting");
@@ -134,7 +135,7 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
         for(uint i = 0; i < tickets.length; i++){
             require(tickets[i] < raffleEntries.length,"Not a valid ticket");
             require(!ticketsClaimed[tickets[i]],"Tickets have already been claimed");
-            require(raffleEntries[tickets[i]] == msg.sender, "Not the owner of this tickets");
+            require(raffleEntries[tickets[i]] == msg.sender, "Not the owner of these tickets");
 
             ticketsClaimed[tickets[i]] = true;
 
@@ -206,6 +207,21 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
 
     function getPrice() public pure returns(uint256){
         return PRICE;
+    }
+
+
+    function getContractState() public view returns(ContractState) {
+        return contractState;
+    }
+
+    function setContractState(uint state) public returns(bool) {
+        require(state < 6,"Not a proper state");
+        require(state > 0, "Not a proper state");
+        require(state  == uint(contractState) + 1, "Not a proper state transition");
+
+        contractState = ContractState(state);
+        return true;
+
     }
 
 
