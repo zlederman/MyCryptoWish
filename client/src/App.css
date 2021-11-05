@@ -6,7 +6,7 @@
   text-align: center;
   overflow-y: scroll;
   height: 100%;
-  background-color: #7C83FD;
+  background-color: #121212;/*#7C83FD*/
  
 }
 html {
@@ -28,15 +28,18 @@ html {
   color: white;
 }
 .jumbtron {
-margin-top: 51px;
+  margin-top: 51px;
 
 }
 
 #card-footer{
+  right: 60%;
+  left: 5%; 
+  top: 80vh; 
+  border-radius: 10%;
   position: absolute;
   background-color: white;
   box-shadow: 0 10px 15px rgba(0,0,0,0.08), 0 6px 6px rgba(0,0,0,0.11);
-
 }
 
 
@@ -89,6 +92,7 @@ b {
   margin-top:10%;
   margin-left:10%;
 }
+
 
 /* 
   ######################################
@@ -308,14 +312,13 @@ ul#members-list{
   position: relative;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(#7F00FF,#2B2F77);
+  background: linear-gradient(#000957,#454768);
   overflow: hidden;
   background-attachment:fixed;
 }
 
 .sky svg {
   position: absolute;
- 
   z-index: 900; 
   animation: animate linear infinite;
 }
@@ -323,19 +326,20 @@ ul#members-list{
 @keyframes animate {
   0% {
       opacity: 0;
-      transform: translateY(0);
+      transform: translate3d(0,0,0);
   }
   10%,90% {
       opacity: .5;
   }
   100% {
       opacity: 0;
-      transform: translateY(-100px);
+      transform: translate3d(100px, -100px, 0);
   }
 }
 
 .background {
   width:100%;
+  height: 25vh; /*TO FIX WELL FROM FLOATING*/
   position: absolute;
   z-index: 950;
   bottom: 0;
@@ -353,12 +357,11 @@ ul#members-list{
 }
 
 .well {
-  
   animation: glow 2s infinite alternate;;
-  width: 16%;
-  height: auto;
+  width: 30vh;
+  /*height: auto;*/
   position: absolute;
-  bottom: 13.9%;
+  bottom: 11%;
   left: 0;
   z-index: 940;
   right: 0;
@@ -367,11 +370,11 @@ ul#members-list{
 }
 
 .moon {
-  width: 8%;
-  height: auto;
+  width: 10vh;
+  height: fixed;
   position: absolute;
   left: 10%;
-  bottom: 72%;
+  top: 10vh;
   z-index: 920;
   filter: drop-shadow(0px 0px 50px rgba(248, 248, 248, 0.699));
   pointer-events:none;
@@ -388,20 +391,38 @@ ul#members-list{
 
 
 .cloud-one {
-  left: 5%;
-  bottom: 60%;
+  width: 60%;
+  height: 40%;
+  left: 7%;
+  /*bottom: 60%;*/
+  top: 2%; 
   opacity: 75%;
   
 
 }
 .cloud-two {
-  left: 0%;
-  bottom: 65%;
+  width: 60%;
+
+  height: 40%;
+  right: 50%;
+  /*bottom: 65%;*/
+  top: 2%; 
   opacity: 75%;
 }
 
+.cloud-three {
+  width: 60%;
+
+  height: 40%;
+  top: 4%;
+  opacity: 75%;
+}
 .cloud-four {
+  width: 60%;
+  height: 40%;
   left:60%;
+  top: 2%;
+  opacity: 50%;
 }
 @keyframes glow {
   from {
@@ -409,7 +430,7 @@ ul#members-list{
   }
 
   to {
-    filter: drop-shadow(8px 8px 100px rgba(241, 255, 160, 0.98));
+    filter: drop-shadow(8px 8px 100px rgba(255, 215, 0, 0.70));
   }
   
 }

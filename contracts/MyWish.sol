@@ -62,8 +62,7 @@ contract MyWish is AccessControl, ERC721Enumerable{
         safeMint(to, _tokenId.current());
         bool success = ownerOf(_tokenId.current()) == to;
         _tokenId.increment();
-        return success;
-        
+        return success; 
     }
 
     function safeMint(address to, uint256 tokenId) private {

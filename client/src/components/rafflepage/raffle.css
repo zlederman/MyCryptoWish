@@ -1,7 +1,7 @@
 .raffle-page {
     display: flex;
     flex-direction: row;
-    background-color: white;
+    background: linear-gradient(#0A0818,#121212); /*496A6F*/
     height: 100%;
     width: 100%;
 }
@@ -12,14 +12,14 @@
     
     min-height:100%;
     display: flex;
-    background-color: #7C83FD;
+    background: linear-gradient(#0A0818,#121212); /*#7C83FD*/
     flex-direction: column;
     
 }
 .right-container {
     width:33%;
     min-height: 100%;
-    background-color: white ;
+    background: linear-gradient(#0A0818,#121212);;/*White*/
     border-bottom-left-radius: 20% !important;
 
 
@@ -41,7 +41,7 @@
 .title-container {
     margin-top: 5%;
     margin-bottom: 5%;
-    color: white;
+    color: white; /*White*/
     width: 40%;
     align-content: left;
 }
@@ -50,9 +50,11 @@ h1 {
 }
 .form-container {
     margin-top: 8%;
+    padding-left: 4%;
+    padding-right: 4%;
     width:70%;
     align-self: center;
-    background-color: white;
+    background-color: White; /*496A6F White*/
     border-radius: 9px;
     margin-bottom: 5%;
     box-shadow: 0 10px 15px rgba(0,0,0,0.11), 0 6px 6px rgba(0,0,0,0.19);
@@ -61,12 +63,12 @@ span {
     font-weight: 900;
     font-size: 400%;
 }
+/*
 .form-label {
-    padding-left: 5%;
+    padding-left: 2vh;
     text-align: left !important;
     font-weight: 900 ;
-    
-}
+}*/
 
 .timer-container {
     margin-top: 8%;

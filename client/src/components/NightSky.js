@@ -1,4 +1,5 @@
 import React, {Component, useRef} from 'react';
+import {Button} from "react-bootstrap"
 import grass from "../grass.png"
 import well from "../well.png"
 import moon from "../moon.png"
@@ -26,16 +27,14 @@ class NightSky extends Component{
         let size = Math.random() *0.05;
         let size_svg = 10
         return React.createElement("svg",{
-            className: "svg",
+            className: "svg", 
             style:{
                 left: x +"px",
                 top: y + "px",
                 width: 1 + size_svg + "px",
                 height: 1 + size_svg +"px",
-                animationDuration: 5 + duration+"s",
+                animationDuration: 5 + duration + "s",
                 animationDelay: duration+'s',
-                
-               
             }
            
         },
@@ -50,11 +49,13 @@ class NightSky extends Component{
         })
         );
     }
-    
+
+
+
+    //
     render() {
         return <div className="sky">
             <img  className="background" src={grass}/>
-        
             <img className="moon" src={moon}/>
             <img  className ="cloud-one cl" src={cloud1}/>
             <img  className ="cloud-two cl" src={cloud2}/>
