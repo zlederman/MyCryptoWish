@@ -4,12 +4,13 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import "./MyWish.sol";
 
 //Need to set up ownable for contract
 //Need to create reserve function
 
-contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
+contract PaymentHandler is PaymentSplitter, VRFConsumerBase {
 
     using Counters for Counters.Counter; 
 
@@ -27,10 +28,10 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
     uint16 immutable evanIndex = 2;
     uint16 immutable sebIndex = 1;
     uint16 immutable wishIndex = 3;
-
+{"jsonrpc":"2.0", "id": 1, "method": "eth_subscribe", "params": ["logs", {"address": "0x8320fe7702b96808f7bbc0d4a888ed1468216cfd", "topics": ["0xd78a0cb8bb633d06981248b816e7bd33c2a35a6089241d099fa519e361cab902"]}]}
     uint256 immutable PRICE = 30000000000000000 wei;
     uint64 immutable TOKEN_CAP = 10000;
-    uint16 immutable USER_TOKEN_CAP = 5;
+    uint16 immutable USER_TOKEN_CAP = 90;
 
     bool raffleIsShuffled = false;
     bool entropySet = false;
@@ -54,7 +55,7 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
     address[] raffleEntries;
     
     event fundsAccepted(address from);
-    event enteredRaffle(address from ,uint16 numTokens);
+    event enteredRaffle(address from ,uint16 numTokens,uint256 lastIndex);
     event raffleShuffled(uint256 totalEntries);
     event ticketsRedeemed(address user, uint16 winningTicketCount);
 
@@ -72,7 +73,7 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
         KEY_HASH = _LINK_KEY_HASH;
         _myWishContract = MyWish(tokenAddress);
         makeAWish = payees[3];
-        contractState = ContractState.PRESALE;
+        contractState = ContractState.RAFFLE;
     }
 
     function enterRaffle(uint16 numTokens)
@@ -81,25 +82,26 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
         require(contractState == ContractState.RAFFLE, "Raffle is not active");
         require(numTokens + raffleCount.current() < TOKEN_CAP,"Please request fewer tokens");
         require(tokensPerUser[msg.sender] + numTokens < USER_TOKEN_CAP,"Please request fewer tokens");
-
-        tokensPerUser[msg.sender] += numTokens;
+      
+        tokensPerUser[msg.sender] = numTokens;
         for(uint i = 0; i < numTokens; i++){
-            raffleCount.increment();
             raffleEntries.push(msg.sender);
+            raffleCount.increment();
+           
         }
         
-        emit enteredRaffle(msg.sender, numTokens);
+        emit enteredRaffle(msg.sender, tokensPerUser[msg.sender],raffleCount.current());
 
     }
     
     function shuffleEntries() public {
         require(contractState == ContractState.PREMINT,"Raffle Is Still Active");
-        require(raffleEntries.length > TOKEN_CAP,"No need to shuffle");
+        require(raffleCount.current() > TOKEN_CAP,"No need to shuffle");
         require(entropySet, "No randomness to shuffle with");
 
-        for (uint256 i = 0; i < raffleEntries.length; i++) {
+        for (uint256 i = 0; i < raffleCount.current(); i++) {
             // Generate a random index to select from
-            uint256 randomIndex = i + entropy % (raffleEntries.length - i);
+            uint256 randomIndex = i + entropy % (raffleCount.current() - i);
             // Collect the value at that random index
             address randomTmp = raffleEntries[randomIndex];
             // Update the value at the random index to the current value
@@ -122,6 +124,9 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
 
     }
 
+    function recieveTokens() public {
+
+    }
 
 
     function isWinner(uint16[] calldata tickets) public { 
