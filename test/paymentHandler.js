@@ -52,13 +52,12 @@ contract("paymentHandler", accounts => {
       const paymentHandlerInstance = await paymentHandler.deployed();
       const requester = accounts[5];
       const quantity = 1;
-      const price = 30000000000000000;
-      await paymentHandlerInstance.enterRaffle.sendTransaction(quantity,{from:requester, gas: 300000, value: price*quantity})
+      await paymentHandlerInstance.enterRaffle.sendTransaction(quantity,{from:requester, gas: 1250000})
       const num_tickets = await paymentHandlerInstance.getTokensRequested.call(requester);
       assert.equal(num_tickets,quantity,"No tickets were added");
 
     })
-    it("should fail adding to raffle - too many tickets",async () => {
+   it("should fail adding to raffle - too many tickets",async () => {
       const paymentHandlerInstance = await paymentHandler.deployed();
       const requester = accounts[5];
       const quantity = 7;
@@ -85,17 +84,17 @@ contract("paymentHandler", accounts => {
       assert.equal(og_balance - 30000,after_balance);
     })
 
-    it("should be able to mutate paymentHandler State", async () => {
-      const paymentHandlerInstance = await paymentHandler.deployed();
-      const contractState = paymentHandlerInstance.getContractState.call();
-      assert.equal(contractState,1)
-      const success = paymentHandlerInstance.setContractState.sendTransaction(contractState + 1);
-      assert.equal(success,true);
-      const success = paymentHandlerInstance.setContractState.sendTransaction(contractState - 1);
-      assert.equal(success,false);
-      const success = paymentHandlerInstance.setContractState.sendTransaction(contractState + 2)
-      assert.equal(success,true)
-    })
+    // it("should be able to mutate paymentHandler State", async () => {
+    //   const paymentHandlerInstance = await paymentHandler.deployed();
+    //   const contractState = paymentHandlerInstance.getContractState.call();
+    //   assert.equal(contractState,1)
+    //   const success = paymentHandlerInstance.setContractState.sendTransaction(contractState + 1);
+    //   assert.equal(success,true);
+    //   const success = paymentHandlerInstance.setContractState.sendTransaction(contractState - 1);
+    //   assert.equal(success,false);
+    //   const success = paymentHandlerInstance.setContractState.sendTransaction(contractState + 2)
+    //   assert.equal(success,true)
+    // })
     
 
   });
