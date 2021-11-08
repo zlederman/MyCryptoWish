@@ -30,7 +30,7 @@ class App extends Component {
       
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-    
+
       const deployedNetwork = PaymentHandlerContract.networks[networkId];
       console.log(PaymentHandlerContract.networks)
       const instance = new web3.eth.Contract(

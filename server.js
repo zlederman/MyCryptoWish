@@ -2,14 +2,17 @@ const express = require('express');
 const path = require('path');
 const WebSocket = require('ws')
 const web3 = require('web3');
+const redis = require('redis')
 const schedule = require('node-schedule');
 const appSockets = express();
 const appServer = express();
 
-const CONTRACT_ADDRESS = "0x5D37B393889185c14A4aA25D9d87FcBfc8d696Be"; //change before running server
+const redisClient = redis.createClient('6379','127.0.0.1');
+const CONTRACT_ADDRESS = "0x5A22534eD9aA1f35A284b748459e250fb159A163"; //change before running server
 const CONTRACT_ABI = require('./client/src/contracts/PaymentHandler.json'); 
 const RAFFLE_TOPIC = "0x0caab1a325caae32148db4a8c14466a83a84b5e074b83e4dced52ea46c6b003f" 
 const WSS_URL = "wss://kovan.infura.io/ws/v3/123d564490cd4062800d63c13c221bd5"
+
 const CONTRACT_OPTIONS = [
     "logs",
     {
@@ -25,6 +28,10 @@ const WS_OPTIONS = {
 }
 
 const ws = new WebSocket(WSS_URL);
+redisClient.on('connect',()=>{
+    console.log('connected to redis');
+    redisClient.ping()
+})
 // const contractInstance = web3Instance.eth.Contract(CONTRACT_ABI,CONTRACT_ADDRESS);
 
 
@@ -91,6 +98,10 @@ ws.onmessage = function (evt) {
         data = res.data.substr(2);
         payload = parse(data);
         console.log(payload)
+        redisClient.set(
+           payload.address,
+           payload.raffleEntries.toString()
+        )
 
         //post payload to db
     }
@@ -102,14 +113,15 @@ setInterval(()=>{
 const parse = (data) => {
     const size = 64
     const numChunks = 3
+    raffleEntries = [];
     let chunks = Array(3)
     for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
         chunks[i] = data.substr(o, size)
-    }
-    address = '0x' + chunks[0];
-    numEntries = parseInt(chunks[1]);
-    lastIndex = parseInt(chunks[2]);
-    raffleEntries = Array(numEntries);
+    } 
+    address = "0x" + parseInt(chunks[0],16).toString(16);
+    numEntries = parseInt(chunks[1],16);
+    lastIndex = parseInt(chunks[2],16);
+
     for(let i = 0; i < numEntries; i++){
         raffleEntries.push(--lastIndex);
     }
@@ -124,9 +136,10 @@ ws.onclose = function () {
 
 
 
-appServer.get('getRaffleTickets', (req,res) => {
-//get user raffle tokens from their address
-//return list of ids
+appServer.get('getraffletix', (req,res) => {
+    address = req.body.address;
+    raffleTickets = redisClient.get(address).split(",");
+    res.send(JSON.stringify({tickets: raffleTickets}))
 })
 
 
