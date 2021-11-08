@@ -276,7 +276,7 @@ glasses_files = {
 
 hat_files = {
     "Baseball Cap" : "hats1",
-    "Crown" : "hats2".
+    "Crown" : "hats2",
     "Bowler" : "hats3", 
     "Potted Plant" : "hats4", 
     "Cowboy" : "hats5", 
@@ -384,13 +384,13 @@ for i in range(TOTAL_STARS):
 
 #Add Token Ids to Json 
 i = 0
-for item in traitsArr
+for item in traitsArr:
     item["tokenId"] = i 
     i = i + 1
 
 
 #Create Image 
-for item in traitsArr
+for item in traitsArr:
     layers = {}
 
     layer1 = Image.open(f'./Backgrounds/{background_files[item["Background"]]}.png').convert('RGBA')
