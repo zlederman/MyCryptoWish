@@ -5,17 +5,20 @@ import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-
 import "./MyWish.sol";
 
-//Need to set up ownable for contract
-//Need to create reserve function
 
 contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
 
     using Counters for Counters.Counter; 
+    enum ContractState {
+        PRESALE,
+        RAFFLE,
+        PREMINT,
+        MINTING,
+        OPEN
+    }
 
-    enum ContractState{PRESALE,RAFFLE,PREMINT,MINTING,OPEN}
     ContractState contractState;
     bytes32 public constant STATE_MANAGER_ROLE = keccak256("STATE_MANAGER_ROLE");
     uint256 public randomnessOutput;
@@ -127,7 +130,7 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
 
     }
 
-    function buyTokens(uint numTokens) payable public {
+    function buyTokens(uint16 numTokens) payable public {
         require(numTokens * PRICE == msg.value,"Incorrect Amount Submitted");
 
         bool success = _myWishContract.createCollectable(msg.sender);
@@ -233,8 +236,8 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
     }
 
         function setStateManagerRole(address stateManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(minter != address(0),"Please Enter Valid Address");
-        grantRole(STATE_MANAGER_ROLE,minter);
+        require(stateManager != address(0),"Please Enter Valid Address");
+        grantRole(STATE_MANAGER_ROLE,stateManager);
        
     }
 

@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import env from "react-dotenv";
+
 import CardFooter from "./components/CardFooter"
 import NightSky from "./components/NightSky"
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -25,18 +27,19 @@ class App extends Component {
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
       const balance = await web3.eth.getBalance(accounts[0])
-
+      
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
- 
+    
       const deployedNetwork = PaymentHandlerContract.networks[networkId];
+      console.log(PaymentHandlerContract.networks)
       const instance = new web3.eth.Contract(
           PaymentHandlerContract.abi,
-          deployedNetwork && deployedNetwork.address,
+          deployedNetwork && deployedNetwork.address
       );
-      console.log(PaymentHandlerContract.abi)
       this.state.contract = instance
       this.state.accounts = accounts;
+      console.log(instance)
     
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.

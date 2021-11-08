@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./raffle.css"
+import env from "react-dotenv"
 import logo from "./icons/logo.png"
 import { useEffect, useState } from "react";
 import image from "./star-sample.png"
@@ -105,12 +106,17 @@ function TimerContainer() {
   
 //<Form.Label column sm={2}>Discord</Form.Label>
 //<Form.Label column sm={2}>Twitter</Form.Label>
+
+
 const RaffleForm = (props) => {
-    const [quantity,setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(1);
+
+
     const handleSubmit = (evt) => {
         evt.preventDefault()
-        props.addToRaffle(quantity)
+        props.addToRaffle(quantity);
     }
+    
     return (
         <div className="form-container">
             <div className="info-container">
