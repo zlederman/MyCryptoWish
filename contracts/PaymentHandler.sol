@@ -34,7 +34,7 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
     uint16 immutable wishIndex = 3;
     uint256 immutable PRICE = 30000000000000000 wei;
     uint64 immutable TOKEN_CAP = 10000;
-    uint16 immutable USER_TOKEN_CAP = 90;
+    uint16 immutable USER_TOKEN_CAP = 4;
 
     bool raffleIsShuffled = false;
     bool entropySet = false;
@@ -76,7 +76,7 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
         KEY_HASH = _LINK_KEY_HASH;
         _myWishContract = MyWish(tokenAddress);
         makeAWish = payees[3];
-        contractState = ContractState.RAFFLE;
+        contractState = ContractState.PRESALE;
         _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
         _setRoleAdmin(STATE_MANAGER_ROLE, DEFAULT_ADMIN_ROLE);
 
@@ -86,17 +86,16 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
     public
     {
         require(contractState == ContractState.RAFFLE, "Raffle is not active");
-        require(numTokens + raffleCount.current() < TOKEN_CAP,"Please request fewer tokens");
         require(tokensPerUser[msg.sender] + numTokens < USER_TOKEN_CAP,"Please request fewer tokens");
       
-        tokensPerUser[msg.sender] = numTokens;
+        tokensPerUser[msg.sender] += numTokens;
         for(uint i = 0; i < numTokens; i++){
             raffleEntries.push(msg.sender);
             raffleCount.increment();
            
         }
         
-        emit enteredRaffle(msg.sender, tokensPerUser[msg.sender],raffleCount.current());
+        emit enteredRaffle(msg.sender, numTokens, raffleCount.current());
 
     }
     
@@ -217,8 +216,8 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
     }
 
 
-    function getContractState() public view returns(ContractState) {
-        return contractState;
+    function getContractState() public view returns(uint) {
+        return uint(contractState);
     }
 
     function setContractState(uint state) public onlyRole(STATE_MANAGER_ROLE) returns(bool) {

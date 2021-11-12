@@ -12,10 +12,10 @@ const util = require('util');
 const appServer = express();
 
 const redisClient = redis.createClient(process.env.REDIS_PORT,'127.0.0.1');
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;//change before running server
+const CONTRACT_ADDRESS = process.argv[2] ? process.argv[2] : process.env.CONTRACT_ADDRESS; //works when running build.sh
 const CONTRACT_ABI = require('./client/src/contracts/PaymentHandler.json'); 
 const RAFFLE_TOPIC = process.env.RAFFLE_TOPIC;
-const WSS_URL = process.env.WSS_URL;
+
 
 const CONTRACT_OPTIONS = [
     "logs",
@@ -31,24 +31,23 @@ const WS_OPTIONS = {
     "params":CONTRACT_OPTIONS
 }
 
-const ws = new WebSocket(WSS_URL);
+const ws = new WebSocket(process.env.WSS_URL);
 redisClient.on('connect',()=>{
-    console.log('connected to redis');
+    report('connected to redis');
     redisClient.ping()
 })
 redisClient.get = util.promisify(redisClient.get);
-// const contractInstance = web3Instance.eth.Contract(CONTRACT_ABI,CONTRACT_ADDRESS);
-
+redisClient.set = util.promisify(redisClient.set);
 
 async function send(web3, gasPrice, transaction) {
     const account = web3.eth.accounts.privateKeyToAccount(process.env.PK).address;
     const options = {
-        to      : transaction._parent._address,
+        to      : CONTRACT_ADDRESS,
         data    : transaction.encodeABI(),
-        gas     : await transaction.estimateGas({from: account}),
-        gasPrice: gasPrice
+        gas     : gasPrice
     };
     const signed  = await web3.eth.accounts.signTransaction(options, process.env.PK);
+  
     const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
     return receipt;
 }
@@ -59,50 +58,66 @@ const dates = {
     'premint':new Date(2021,11,26,23,59),
     'mint':new Date(2021,11,27,23,59),
     'open':new Date(2021,11,30,23,59),
-}
+};
+
+
+  
+    
+
 
 const setRaffleJob = schedule.scheduleJob(dates['raffle'],async() =>{
+    
     const web3Instance = new web3(
         new Web3.providers.WebsocketProvider(process.env.WSS_URL)
     );
-    let transaction = contractInstance.methods.setState(2);
-    let receipt = await send(web3Instance,25000,transaction);
+    const contractInstance = new web3Instance.eth.Contract(CONTRACT_ABI.abi,CONTRACT_ADDRESS);
+    let transaction = await contractInstance.methods.setState(2);
+    let receipt = await send(web3Instance,12e6,transaction);
 })
 const setPreMintJob = schedule.scheduleJob(dates['premint'],async() =>{
     const web3Instance = new web3(
         new Web3.providers.WebsocketProvider(process.env.WSS_URL)
     );
-    let transaction = contractInstance.methods.setState(3);
-    let receipt = await send(web3Instance,25000,transaction);
+    const contractInstance = new web3Instance.eth.Contract(CONTRACT_ABI.abi,CONTRACT_ADDRESS);
+    let transaction = await contractInstance.methods.setState(3);
+    let receipt = await send(web3Instance,12e6,transaction);
 })
 const setMintJob = schedule.scheduleJob(dates['mint'],async() =>{
     const web3Instance = new web3(
         new Web3.providers.WebsocketProvider(process.env.WSS_URL)
     );
-    let transaction = contractInstance.methods.setState(4);
-    let reciept = await send(web3Instance,25000,transaction);
+    const contractInstance = new web3Instance.eth.Contract(CONTRACT_ABI.abi,CONTRACT_ADDRESS);
+    let transaction = await contractInstance.methods.setState(4);
+    let reciept = await send(web3Instance,12e6,transaction);
 })
 const setOpenJob = schedule.scheduleJob(dates['open'],async ()=>{
     const web3Instance = new web3(
         new Web3.providers.WebsocketProvider(process.env.WSS_URL)
     );
-    let transaction = contractInstance.methods.setState(5);
-    let reciept = await send(web3Instance,25000,transaction);
+    const contractInstance = new web3Instance.eth.Contract(CONTRACT_ABI.abi,CONTRACT_ADDRESS);
+    let transaction = await contractInstance.methods.setState(5);
+    let reciept = await send(web3Instance,12e6,transaction);
 })
 
+const report = (info) => {
+    
+    console.log("> "+info)
+    console.log("----------------------------------")
+}
+    
 
 ws.onopen = function(){
-    console.log("opened connection to eth-node")
+    report("opened connection to eth-node")
     ws.send(JSON.stringify(WS_OPTIONS))
 }
 ws.onmessage = async function (evt) {
-    console.log('msg recieved from eth-node')
+    report('msg recieved from eth-node')
     json = JSON.parse(evt.data)
     if(json['params']){
         res = json.params.result
         data = res.data.substr(2);
         payload = parse(data);
-        console.log(payload)
+        report(payload)
         await redisClient.set(
            payload.address,
            payload.raffleEntries.toString()
@@ -133,9 +148,22 @@ const parse = (data) => {
     return payload;
 
 }
+
+const loadRedis = async (payload) => {
+    let value = payload.raffleEntries.toString();
+    try {
+        value += await redisClient.get(payload.address);
+    }catch(e){
+        console.log(e)
+    }
+    await redisClient.set(
+        payload.address,
+        value
+     )
+}
 ws.onclose = function () {
     // websocket is closed.
-    console.log("Connection closed...");
+    report("Connection closed...");
 };
 
 
@@ -147,7 +175,7 @@ appServer.get('/raffle', async (req,res) => {
 })
 
 
-appServer.listen(8080,console.log('appServer listening on port 8080'));
+appServer.listen(8080,report('appServer listening on port 8080'));
 
 
 

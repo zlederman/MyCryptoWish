@@ -1,5 +1,7 @@
 const paymentHandler = artifacts.require("./PaymentHandler.sol");
 const wishToken = artifacts.require("./MyWish.sol");
+const truffleAssert = require('truffle-assertions');
+require('dotenv').config({ path: '/Users/zlederman/Documents/Code/js/truffle-react/.env' })
 
 contract("paymentHandler", accounts => {
 
@@ -16,85 +18,49 @@ contract("paymentHandler", accounts => {
       const paymentHandlerInstance = await paymentHandler.deployed();
 
       const address = await paymentHandlerInstance.getTokenAddress.call();
-      assert.equal(address,tokenInstance.address,"is wrong")
+      assert.equal(address,tokenInstance.address,"address of token contract is wrong")
     })
     it("should only allow minter role ",async() =>{
       const tokenInstance = await wishToken.deployed()
       const paymentHandlerInstance = await paymentHandler.deployed()
       const success = await tokenInstance.getRole.call({from:paymentHandlerInstance.address})
       assert.equal(true,success,"Name error")
+      await truffleAssert.reverts(tokenInstance.getRole.call({from:accounts[3]}))
     })
 
+    it("should be able to mutate paymentHandler state to Raffle", async () => {
+      const paymentHandlerInstance = await paymentHandler.deployed();
+      let contractStateInit = await paymentHandlerInstance.getContractState.call();
+      assert.equal(contractStateInit.words[0],0,"Wrong State");
+      let success = await paymentHandlerInstance.setContractState.sendTransaction(contractStateInit + 1,{from: accounts[0], gas:125000});
+      let contractStateNext = await paymentHandlerInstance.getContractState.call();
+    
+      assert.equal(contractStateNext.words[0],contractStateInit.words[0]+1,"state not set properly");
+    });
 
-    // it("should increase balances", async() =>{
-    //   const paymentHandlerInstance = await paymentHandler.deployed();
-    //   price = 3000000000000000000;
-      
-    //   const ppl = Array(4);
-    //   const balances = Array(4);
-    //   const balancesNew = Array(4);
-    //   for(let i = 0; i < 4; i++){
-    //     ppl[i] = await paymentHandlerInstance.payee.call(i);
-    //     balances[i] =  parseInt(await web3.eth.getBalance(ppl[i]));
-    //   } 
-     
-    //   const res = await paymentHandlerInstance.buyToken.sendTransaction({from: accounts[11], gas:3000000, value: 3000000000000000000});
-    //   for(let i = 0; i<  4; i++){
-    //     balancesNew[i] =  parseInt(await web3.eth.getBalance(ppl[i]));
-    //   }
-    //   assert.equal(balancesNew[0],balances[0] + (price*0.02),"incorrect amount added Zach");
-    //   assert.equal(balancesNew[1],balances[1] + (price*0.02),"incorrect amount added Seb ");
-    //   assert.equal(balancesNew[2],balances[2] + (price*0.06),"incorrect amount added Evan");
-    //   assert.equal(balancesNew[3],balances[3] + (price*0.9),"incorrect amount added Make A Wish");
-    // })
-
-    it("should add user to raffle", async() =>{
+    it("should test enterRaffle", async() =>{
       const paymentHandlerInstance = await paymentHandler.deployed();
       const requester = accounts[5];
-      const quantity = 1;
+      let currentTix = 0
+      quantity = 1
+
       await paymentHandlerInstance.enterRaffle.sendTransaction(quantity,{from:requester, gas: 1250000})
-      const num_tickets = await paymentHandlerInstance.getTokensRequested.call(requester);
-      assert.equal(num_tickets,quantity,"No tickets were added");
+      let num_tickets = await paymentHandlerInstance.getTokensRequested.call(requester);
+      assert.equal(num_tickets,++currentTix,"No tickets were added");
 
-    })
-   it("should fail adding to raffle - too many tickets",async () => {
-      const paymentHandlerInstance = await paymentHandler.deployed();
-      const requester = accounts[5];
-      const quantity = 7;
-      const price = 30000000000000000;
-      og_balance = parseInt(await web3.eth.getBalance(requester));
+      await paymentHandlerInstance.enterRaffle.sendTransaction(quantity,{from:requester, gas: 1250000})
+      num_tickets = await paymentHandlerInstance.getTokensRequested.call(requester);
+      assert.equal(num_tickets,++currentTix,"No tickets were added");
 
-      await paymentHandlerInstance.enterRaffle.sendTransaction(quantity,{from:requester, gas: 300000, value: price*quantity})
-      const num_tickets = await paymentHandlerInstance.getTokensRequested.call(requester);
-      const after_balance = parseInt(await web3.eth.getBalance(requester));
-      assert.notEqual(num_tickets,quantity);
-      assert.equal(og_balance - 30000,after_balance);
+      await paymentHandlerInstance.enterRaffle.sendTransaction(quantity,{from:requester, gas: 1250000})
+      num_tickets = await paymentHandlerInstance.getTokensRequested.call(requester);
+      assert.equal(num_tickets,++currentTix,"No tickets were added");
 
-    })
-    it("should fail adding to raffle - not enough eth",async () => {
-      const paymentHandlerInstance = await paymentHandler.deployed();
-      const requester = accounts[5];
-      og_balance = parseInt(await web3.eth.getBalance(requester));
-      const quantity = 7;
-      const price = 30000000000000000;
-      await paymentHandlerInstance.enterRaffle.sendTransaction(quantity,{from:requester, gas: 300000, value: price * (quantity - 1)})
-      const num_tickets = await paymentHandlerInstance.getTokensRequested.call(requester);
-      const after_balance = parseInt(await web3.eth.getBalance(requester));
-      assert.notEqual(num_tickets,quantity);
-      assert.equal(og_balance - 30000,after_balance);
+      await truffleAssert.reverts(
+        paymentHandlerInstance.enterRaffle(quantity,{from:requester,gas:1250000}),
+        "Returned error: VM Exception while processing transaction: revert Please request fewer tokens -- Reason given: Please request fewer tokens.")
     })
 
-    // it("should be able to mutate paymentHandler State", async () => {
-    //   const paymentHandlerInstance = await paymentHandler.deployed();
-    //   const contractState = paymentHandlerInstance.getContractState.call();
-    //   assert.equal(contractState,1)
-    //   const success = paymentHandlerInstance.setContractState.sendTransaction(contractState + 1);
-    //   assert.equal(success,true);
-    //   const success = paymentHandlerInstance.setContractState.sendTransaction(contractState - 1);
-    //   assert.equal(success,false);
-    //   const success = paymentHandlerInstance.setContractState.sendTransaction(contractState + 2)
-    //   assert.equal(success,true)
-    // })
     
 
   });
