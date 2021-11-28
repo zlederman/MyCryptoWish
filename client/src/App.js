@@ -8,6 +8,11 @@ import getWeb3 from "./getWeb3";
 import AboutPage from "./components/about";
 import {Button} from "react-bootstrap"
 import "./App.css";
+// import Carousel from "./components/gallerypage/gallerypage"
+// import einstein from "./assets/einstein.png"
+// import fireman from "./assets/Fireman.png"
+// import ninja from "./assets/ninja.png"
+// import rainbow from "./assets/rainbow.png"
 
 import WishView from "./components/WishFrame";
 import RafflePage from "./components/rafflepage/rafflepage"
@@ -69,14 +74,16 @@ class App extends Component {
     return (
       <div className="App">
         <div>
-        <NightSky></NightSky>
-        
-        {/* {this.state.hidden ? <WishView handleClick= {this.execPayment.bind(this)}/> : <AboutPage/>} */}
-        <CardFooter handleClick={this.onClickHide.bind(this)}></CardFooter>  
+          <div>
+            
+            <NightSky></NightSky>
+          </div>
+          
+          {/* {this.state.hidden ? <WishView handleClick= {this.execPayment.bind(this)}/> : <AboutPage/>} */}
+          {/* <CardFooter handleClick={this.onClickHide.bind(this)}></CardFooter>   */}
         </div>
         { <div>
-          
-          <RafflePage/> 
+          <RafflePage/>
           <AboutPage/>
         </div> }
       </div>

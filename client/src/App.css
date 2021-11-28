@@ -102,14 +102,15 @@ b {
   ######################################
 */
 
+
+
 .container#nav {
   display: inherit;
   justify-content: center;
-  
 }
 
 .nav-link {
-  color:white !important;
+  color:rgb(255, 255, 255) !important;
   border-radius: 9px;
 }
 
@@ -121,7 +122,8 @@ b {
 
 .nav-link > h3 {
   font-weight: bolder !important;
-  font-size: 2rem;
+  font-size: .75rem;
+  z-index: 1000;
 }
 
 
@@ -252,6 +254,23 @@ ul#members-list{
   height:8rem;
 }
 
+/* 
+  ######################################
+
+    Gallery  
+
+  ######################################
+*/
+.container#gallery {
+  margin-top: 7.5%;
+  justify-content: space-between;
+  gap:5%;
+  background-color: white;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.11), 0 6px 6px rgba(0,0,0,0.19);
+  padding: 5%;
+  border-radius: 9px;
+  
+}
 
 /* 
   ######################################
@@ -306,8 +325,6 @@ ul#members-list{
   margin-top: 5.5%;
 }
 
-
-
 .sky {
   position: relative;
   width: 100%;
@@ -335,6 +352,12 @@ ul#members-list{
       opacity: 0;
       transform: translate3d(100px, -100px, 0);
   }
+}
+
+.sky .Button#MYWButton{
+  position: absolute;
+  bottom: 0;
+
 }
 
 .background {
@@ -390,12 +413,24 @@ ul#members-list{
 }
 
 
+.sky h4 {
+  position: absolute;
+  color: white;
+  font-weight: bolder !important;
+  bottom: 10vh;
+  right: 10vh;
+  /* padding-left: 80%;
+  padding-top: 10%; */
+  z-index: 1000;
+}
+
+
 .cloud-one {
   width: 60%;
   height: 40%;
   left: 7%;
   /*bottom: 60%;*/
-  top: 2%; 
+  top: 7vh; 
   opacity: 75%;
   
 
@@ -406,7 +441,7 @@ ul#members-list{
   height: 40%;
   right: 50%;
   /*bottom: 65%;*/
-  top: 2%; 
+  top: 7vh; 
   opacity: 75%;
 }
 
@@ -414,7 +449,7 @@ ul#members-list{
   width: 60%;
 
   height: 40%;
-  top: 4%;
+  top: 8vh;
   opacity: 75%;
 }
 .cloud-four {

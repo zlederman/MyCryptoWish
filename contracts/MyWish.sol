@@ -7,7 +7,14 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 
+//Mint at gas cost\
+//How are they paying
+//Need them 
+//Get a raffle ticket
+//sign with the raffle ticket
+//can then pay
 
+//NEED TO CHANGE CONTRACT
 
 
 contract MyWish is AccessControl, ERC721Enumerable{
@@ -32,6 +39,7 @@ contract MyWish is AccessControl, ERC721Enumerable{
     constructor() ERC721("MyWish","WSH") {
         _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
         _setRoleAdmin(MINTER_ROLE, DEFAULT_ADMIN_ROLE);
+        // need to set this role up
         _setRoleAdmin(BASEURI_ROLE,DEFAULT_ADMIN_ROLE);
     }
     

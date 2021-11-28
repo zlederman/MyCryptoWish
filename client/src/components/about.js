@@ -1,33 +1,35 @@
 import {Nav,Navbar,Figure} from 'react-bootstrap';
 import React, {Component, useRef} from 'react';
 import ProgressBar from './ProgressBar';
+import Carousel from "./gallerypage/gallerypage"
+import einstein from "../assets/einstein.png"
+import fireman from "../assets/Fireman.png"
+import ninja from "../assets/ninja.png"
+import rainbow from "../assets/rainbow.png"
 
 
 class AboutPage extends Component{
     render(){
         return(
                 <div className="container" id="page">
-                    <div className="container" id="nav">
-
+                    {/* <div className="container" id="nav">
                         <Navbar className="ml-left " expand="xxl">
-                        
                             <Nav.Link href="#brief" className="nav-item"><h3>About</h3></Nav.Link>
                             <Nav.Link href="#team" className="nav-item"><h3>Team</h3></Nav.Link>
                             <Nav.Link href="#purchase-guide" className="nav-item"><h3>How To Purchase</h3></Nav.Link>
                             <Nav.Link className="nav-item"><h3>Provenance</h3></Nav.Link>
                             <Nav.Link className="nav-item"><h3>Gallery</h3></Nav.Link>
                         </Navbar>
-                    </div>
+                    </div> */}
                     
-                    <div className="container" id="progress">
+                    {/* <div className="container" id="progress">
                         
                         
                         <ProgressBar></ProgressBar>
         
-                    </div>
+                    </div> */}
                    
                     <div className="container" id="brief">
-                        
                         <div className="brief-p"> 
                             <h2 className="section-heading"><b><i>Your Wish Is My Command</i></b></h2>               
                             <p>
@@ -53,7 +55,6 @@ class AboutPage extends Component{
                             </Figure>
                             </div>
                         </div>
-                        
                     </div>
                     <div className="container" id="team">
                         <div className="team-text">
@@ -98,6 +99,42 @@ class AboutPage extends Component{
                         </div>
                         
                     </div>
+
+                    <div className = "container" id="gallery">
+                        <Carousel
+                            show={3}
+                            infiniteLoop={true}
+                        >
+                            <div>
+                                <div style={{padding: 8}}>
+                                    <img src={einstein} alt="placeholder" style={{width: '100%'}} />
+                                </div>
+                            </div>
+                            <div>
+                                <div style={{padding: 8}}>
+                                    <img src={fireman} alt="placeholder" style={{width: '100%'}} />
+                                </div>
+                            </div>
+                            <div>
+                                <div style={{padding: 8}}>
+                                    <img src={ninja} alt="placeholder" style={{width: '100%'}} />
+                                </div>
+                            </div>
+                            <div>
+                                <div style={{padding: 8}}>
+                                    <img src={rainbow} alt="placeholder" style={{width: '100%'}} />
+                                </div>
+                            </div>
+                            <div>
+                                <div style={{padding: 8}}>
+                                    <img src={ninja} alt="placeholder" style={{width: '100%'}} />
+                                </div>
+                            </div>
+                        </Carousel>
+                    </div>
+                    
+                    
+
                     <div className="container line"></div>
                     <div className="container" id="about">
                     </div>
