@@ -51,7 +51,7 @@ const RafflePage = (props) => {
 function TimerContainer() {
     const calculateTimeLeft = () => {
       let year = new Date().getFullYear();
-      const difference = +new Date(`${year}-11-1`) - +new Date();
+      const difference = +new Date(`${year}-11-29`) - +new Date();
       let timeLeft = {};
   
       if (difference > 0) {
