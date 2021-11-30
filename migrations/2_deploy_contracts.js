@@ -1,5 +1,8 @@
 var myWish = artifacts.require("./MyWish.sol");
 var paymentHandler = artifacts.require("./PaymentHandler");
+const process = require('process');
+require('dotenv').config({ path: '/Users/zlederman/Documents/Code/js/truffle-react/.env' })
+
 
 module.exports = async function(deployer,network,accounts) {
   const ppl = [accounts[0],accounts[1],accounts[2],accounts[3]];
@@ -16,8 +19,10 @@ module.exports = async function(deployer,network,accounts) {
     _LINK_ADDRESS,
     VRFCOORDINATOR
   );
+  const paymentHandlerInstance = await paymentHandler.deployed();
+  const stateManager = deployer.network == "development" ? accounts[0] : process.env.MY_ADDRESS;
+  await paymentHandlerInstance.setStateManagerRole(stateManager);
 
-  const paymentHandlerInstance = await paymentHandler.deployed()
   await myWishInstance.setMinterRole(paymentHandlerInstance.address);
 };
 

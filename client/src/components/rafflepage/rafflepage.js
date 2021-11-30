@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./raffle.css"
+//import env from "react-dotenv"
 import logo from "./icons/logo.png"
 import { useEffect, useState } from "react";
 import image from "./star-sample.png"
@@ -16,7 +17,7 @@ const RafflePage = (props) => {
                     <img className="logo" src={logo}></img>
                 </div>
                 <TimerContainer/>
-                <RaffleForm></RaffleForm>
+                <RaffleForm addToRaffle={props.addToRaffle} ></RaffleForm>
 
                
             </div>
@@ -51,7 +52,7 @@ const RafflePage = (props) => {
 function TimerContainer() {
     const calculateTimeLeft = () => {
       let year = new Date().getFullYear();
-      const difference = +new Date(`${year}-11-29`) - +new Date();
+      const difference = +new Date(`${year}-11-17`) - +new Date();
       let timeLeft = {};
   
       if (difference > 0) {
@@ -105,7 +106,17 @@ function TimerContainer() {
   
 //<Form.Label column sm={2}>Discord</Form.Label>
 //<Form.Label column sm={2}>Twitter</Form.Label>
+
+
 const RaffleForm = (props) => {
+    const [quantity, setQuantity] = useState(1);
+
+
+    const handleSubmit = (evt) => {
+        evt.preventDefault()
+        props.addToRaffle(quantity);
+    }
+    
     return (
         <div className="form-container">
             <div className="info-container">
@@ -135,9 +146,19 @@ const RaffleForm = (props) => {
                         We'll never share your email with anyone else.
                     </Form.Text>
                 </Form.Group>
+                <Form.Group as={Row} controlId="formGridState" id="Selector">
+                    <Form.Label>Wish Quantity</Form.Label>
+                    <Form.Control as="select" defaultValue="1"  onChange={e => setQuantity(e.target.value)}>
+                        <option>Choose...</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </Form.Control>
+                </Form.Group>
 
              
-                <Button variant="primary" type="submit">
+                <Button variant="primary" style={{background: '#FDD644'}} type="submit" onClick={handleSubmit}>
                 Submit
                 </Button>
             </Form>

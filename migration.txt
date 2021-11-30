@@ -1,0 +1,148 @@
+
+Compiling your contracts...
+===========================
+> Everything is up to date, there is nothing to compile.
+
+
+
+Migrations dry-run (simulation)
+===============================
+> Network name:    'kovan-fork'
+> Network id:      42
+> Block gas limit: 12500000 (0xbebc20)
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > block number:        28321392
+   > block timestamp:     1636684587
+   > account:             0x2CCb94C538997A904ff87b4FceE8676996959cC3
+   > balance:             0.161221832647015779
+   > gas used:            186843 (0x2d9db)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.000373686 ETH
+
+   -------------------------------------
+   > Total cost:         0.000373686 ETH
+
+
+2_deploy_contracts.js
+=====================
+
+   Replacing 'MyWish'
+   ------------------
+   > block number:        28321394
+   > block timestamp:     1636684601
+   > account:             0x2CCb94C538997A904ff87b4FceE8676996959cC3
+   > balance:             0.153860178647015779
+   > gas used:            3653311 (0x37bebf)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.007306622 ETH
+
+
+   Replacing 'PaymentHandler'
+   --------------------------
+   > block number:        28321395
+   > block timestamp:     1636684641
+   > account:             0x2CCb94C538997A904ff87b4FceE8676996959cC3
+   > balance:             0.146298938647015779
+   > gas used:            3780620 (0x39b00c)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00756124 ETH
+
+   -------------------------------------
+   > Total cost:         0.014867862 ETH
+
+
+Summary
+=======
+> Total deployments:   3
+> Final cost:          0.015241548 ETH
+
+
+
+
+
+Starting migrations...
+======================
+> Network name:    'kovan'
+> Network id:      42
+> Block gas limit: 12500000 (0xbebc20)
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > transaction hash:    0x80db89dc8bb80d17788742d6311310482098ba5995cdf09f2492d7e2ca8784c1
+   > Blocks: 1            Seconds: 4
+   > contract address:    0xA8c3d8F21ececbC700c52201DD60083d635257DE
+   > block number:        28321410
+   > block timestamp:     1636684660
+   > account:             0x2CCb94C538997A904ff87b4FceE8676996959cC3
+   > balance:             0.161087661145593778
+   > gas used:            203143 (0x31987)
+   > gas price:           2.500000007 gwei
+   > value sent:          0 ETH
+   > total cost:          0.000507857501422001 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:     0.000507857501422001 ETH
+
+
+2_deploy_contracts.js
+=====================
+
+   Replacing 'MyWish'
+   ------------------
+   > transaction hash:    0x7e9e057567be888218abf096d408b5c76a0c9151ddc8e258f277760e3734972a
+   > Blocks: 0            Seconds: 0
+   > contract address:    0x72b2a84b0345A969e8BE27381330D5eeC3CCb203
+   > block number:        28321412
+   > block timestamp:     1636684668
+   > account:             0x2CCb94C538997A904ff87b4FceE8676996959cC3
+   > balance:             0.151580593618973989
+   > gas used:            3756911 (0x39536f)
+   > gas price:           2.500000007 gwei
+   > value sent:          0 ETH
+   > total cost:          0.009392277526298377 ETH
+
+
+   Replacing 'PaymentHandler'
+   --------------------------
+   > transaction hash:    0xd66c6e3f536e53b8d2b046e1173112144d3590ab33301b83eb200a1be563e75b
+   > Blocks: 0            Seconds: 0
+   > contract address:    0x9824983ae308841DF986Eb1FCE441f9545c9b731
+   > block number:        28321413
+   > block timestamp:     1636684672
+   > account:             0x2CCb94C538997A904ff87b4FceE8676996959cC3
+   > balance:             0.141288293590155549
+   > gas used:            4116920 (0x3ed1b8)
+   > gas price:           2.500000007 gwei
+   > value sent:          0 ETH
+   > total cost:          0.01029230002881844 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:     0.019684577555116817 ETH
+
+
+Summary
+=======
+> Total deployments:   3
+> Final cost:          0.020192435056538818 ETH
+
+
+

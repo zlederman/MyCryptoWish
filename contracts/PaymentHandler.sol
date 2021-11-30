@@ -4,18 +4,23 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./MyWish.sol";
 
-//Need to set up ownable for contract
-//Need to create reserve function
 
-contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
+contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
 
     using Counters for Counters.Counter; 
+    enum ContractState {
+        PRESALE,
+        RAFFLE,
+        PREMINT,
+        MINTING,
+        OPEN
+    }
 
-    enum ContractState{PRESALE,RAFFLE,PREMINT,MINTING,OPEN}
     ContractState contractState;
-
+    bytes32 public constant STATE_MANAGER_ROLE = keccak256("STATE_MANAGER_ROLE");
     uint256 public randomnessOutput;
     bytes32 public requestId;
 
@@ -27,10 +32,9 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
     uint16 immutable evanIndex = 2;
     uint16 immutable sebIndex = 1;
     uint16 immutable wishIndex = 3;
-
     uint256 immutable PRICE = 30000000000000000 wei;
     uint64 immutable TOKEN_CAP = 10000;
-    uint16 immutable USER_TOKEN_CAP = 5;
+    uint16 immutable USER_TOKEN_CAP = 4;
 
     bool raffleIsShuffled = false;
     bool entropySet = false;
@@ -39,7 +43,6 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
 
     MyWish _myWishContract;
 
-    
     uint16 sebShares = 2;
     uint16 zachShares = 2;
     uint16 evanShares = 6;
@@ -54,9 +57,10 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
     address[] raffleEntries;
     
     event fundsAccepted(address from);
-    event enteredRaffle(address from ,uint16 numTokens);
+    event enteredRaffle(address from ,uint16 numTokens,uint256 lastIndex);
     event raffleShuffled(uint256 totalEntries);
     event ticketsRedeemed(address user, uint16 winningTicketCount);
+    event tokensPurchased(address user, uint16 tokensPurchased);
 
     constructor(
         address tokenAddress,
@@ -73,33 +77,36 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
         _myWishContract = MyWish(tokenAddress);
         makeAWish = payees[3];
         contractState = ContractState.PRESALE;
+        _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
+        _setRoleAdmin(STATE_MANAGER_ROLE, DEFAULT_ADMIN_ROLE);
+
     }
 
     function enterRaffle(uint16 numTokens)
     public
     {
         require(contractState == ContractState.RAFFLE, "Raffle is not active");
-        require(numTokens + raffleCount.current() < TOKEN_CAP,"Please request fewer tokens");
         require(tokensPerUser[msg.sender] + numTokens < USER_TOKEN_CAP,"Please request fewer tokens");
-
+      
         tokensPerUser[msg.sender] += numTokens;
         for(uint i = 0; i < numTokens; i++){
-            raffleCount.increment();
             raffleEntries.push(msg.sender);
+            raffleCount.increment();
+           
         }
         
-        emit enteredRaffle(msg.sender, numTokens);
+        emit enteredRaffle(msg.sender, numTokens, raffleCount.current());
 
     }
     
     function shuffleEntries() public {
         require(contractState == ContractState.PREMINT,"Raffle Is Still Active");
-        require(raffleEntries.length > TOKEN_CAP,"No need to shuffle");
+        require(raffleCount.current() > TOKEN_CAP,"No need to shuffle");
         require(entropySet, "No randomness to shuffle with");
 
-        for (uint256 i = 0; i < raffleEntries.length; i++) {
+        for (uint256 i = 0; i < raffleCount.current(); i++) {
             // Generate a random index to select from
-            uint256 randomIndex = i + entropy % (raffleEntries.length - i);
+            uint256 randomIndex = i + entropy % (raffleCount.current() - i);
             // Collect the value at that random index
             address randomTmp = raffleEntries[randomIndex];
             // Update the value at the random index to the current value
@@ -114,7 +121,7 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
     }
 
     function setEntropy() public {
-
+        
         require(contractState == ContractState.PREMINT,'raffle is still active');
         require(!entropySet,'Entropy is already set, no need');
         
@@ -122,6 +129,12 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
 
     }
 
+    function buyTokens(uint16 numTokens) payable public {
+        require(numTokens * PRICE == msg.value,"Incorrect Amount Submitted");
+
+        bool success = _myWishContract.createCollectable(msg.sender);
+        emit tokensPurchased(msg.sender, numTokens);
+    }
 
 
     function isWinner(uint16[] calldata tickets) public { 
@@ -136,26 +149,19 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
             require(tickets[i] < raffleEntries.length,"Not a valid ticket");
             require(!ticketsClaimed[tickets[i]],"Tickets have already been claimed");
             require(raffleEntries[tickets[i]] == msg.sender, "Not the owner of these tickets");
-
             ticketsClaimed[tickets[i]] = true;
-
             if(tickets[i] < TOKEN_CAP){
-                bool success = _myWishContract.createCollectable(msg.sender);
-                require(success,"Something happended");
                 winningTicketCount += 1;
             }
      
         }
         if(winningTicketCount < tickets.length){
-            (bool sent, ) = payable(msg.sender).call{
-                value: (tickets.length - winningTicketCount) * PRICE
-            }("");
+            tokensPerUser[msg.sender] = winningTicketCount;
         }
-
         emit ticketsRedeemed(msg.sender, winningTicketCount);
 
-
     }
+    
 
     function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
         require(raffleEntries.length > TOKEN_CAP, "No need to shuffle addresses");
@@ -210,18 +216,28 @@ contract PaymentHandler is PaymentSplitter, VRFConsumerBase{
     }
 
 
-    function getContractState() public view returns(ContractState) {
-        return contractState;
+    function getContractState() public view returns(uint) {
+        return uint(contractState);
     }
 
-    function setContractState(uint state) public returns(bool) {
+    function setContractState(uint state) public onlyRole(STATE_MANAGER_ROLE) returns(bool) {
         require(state < 6,"Not a proper state");
         require(state > 0, "Not a proper state");
         require(state  == uint(contractState) + 1, "Not a proper state transition");
+        if(state == 3){
+            //premint stage needs to be shuffled
+            setEntropy();
 
+        }
         contractState = ContractState(state);
         return true;
 
+    }
+
+        function setStateManagerRole(address stateManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(stateManager != address(0),"Please Enter Valid Address");
+        grantRole(STATE_MANAGER_ROLE,stateManager);
+       
     }
 
 
