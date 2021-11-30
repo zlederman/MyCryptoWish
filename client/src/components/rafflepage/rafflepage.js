@@ -13,24 +13,12 @@ const RafflePage = (props) => {
     return (
         <div className="raffle-page">
             <div className="left-container">
-                <div className="title-container">
-                    <img className="logo" src={logo}></img>
-                </div>
                 <TimerContainer/>
                 <RaffleForm addToRaffle={props.addToRaffle} ></RaffleForm>
 
                
             </div>
             <div className="right-container">
-                <div className="social-container">
-                    <div className="twitter-container">
-                        <img src={twitter}></img>
-                    </div>
-                    <div className="discord-container">
-                        <img src={discord}></img>
-                    </div>
-                    
-                </div>
                 <Card style={{ width: 'auto', height: 'auto', right: '12%'}}>
                     <Card.Img variant="top" src={image}/>
                     <Card.Body>
@@ -118,8 +106,8 @@ const RaffleForm = (props) => {
     }
     
     return (
-        <div className="form-container">
-            <div className="info-container">
+        <div className="form-container" >
+            <div className="info-container" id="raffle">
                 <h1>Our Raffle Is Live!</h1>
                 <h3>Enter and your wish might just come true</h3>
             </div>
@@ -156,8 +144,6 @@ const RaffleForm = (props) => {
                         <option>4</option>
                     </Form.Control>
                 </Form.Group>
-
-             
                 <Button variant="primary" style={{background: '#FDD644'}} type="submit" onClick={handleSubmit}>
                 Submit
                 </Button>

@@ -125,36 +125,42 @@ class AboutPage extends Component{
                     </div>
 
                     <div className = "container" id="gallery">
-                        <Carousel
-                            show={3}
-                            infiniteLoop={true}
-                        >
-                            <div>
-                                <div style={{padding: 8}}>
-                                    <img src={einstein} alt="placeholder" style={{width: '100%'}} />
-                                </div>
+                        <div className="team-text">
+                            <div className="heading gallery" >
+                                <h2 className="section-heading"><b><i>The Gallery</i></b></h2>
                             </div>
-                            <div>
-                                <div style={{padding: 8}}>
-                                    <img src={fireman} alt="placeholder" style={{width: '100%'}} />
+
+                            <Carousel
+                                show={3}
+                                infiniteLoop={true}
+                            >
+                                <div>
+                                    <div style={{padding: 8}}>
+                                        <img src={einstein} alt="placeholder" style={{width: '100%'}} />
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <div style={{padding: 8}}>
-                                    <img src={ninja} alt="placeholder" style={{width: '100%'}} />
+                                <div>
+                                    <div style={{padding: 8}}>
+                                        <img src={fireman} alt="placeholder" style={{width: '100%'}} />
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <div style={{padding: 8}}>
-                                    <img src={rainbow} alt="placeholder" style={{width: '100%'}} />
+                                <div>
+                                    <div style={{padding: 8}}>
+                                        <img src={ninja} alt="placeholder" style={{width: '100%'}} />
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <div style={{padding: 8}}>
-                                    <img src={ninja} alt="placeholder" style={{width: '100%'}} />
+                                <div>
+                                    <div style={{padding: 8}}>
+                                        <img src={rainbow} alt="placeholder" style={{width: '100%'}} />
+                                    </div>
                                 </div>
-                            </div>
-                        </Carousel>
+                                <div>
+                                    <div style={{padding: 8}}>
+                                        <img src={ninja} alt="placeholder" style={{width: '100%'}} />
+                                    </div>
+                                </div>
+                            </Carousel>
+                        </div>
                     </div>
                     
                     
