@@ -53,7 +53,7 @@ class App extends Component {
     this.setState({contractState: state})
   }
 
-  validateSignature = async(sig) => {
+  validateSignature = async(sig,numTokens) => {
     const {web3, accounts,contract} = this.state;
     try {
       const response = contract.methods.whiteListMint.call(sig,numTokens,{from:accounts[0]});

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { Form } from "react-bootstrap";
+import { Form ,Button} from "react-bootstrap";
 import {TimerContainer} from "./rafflepage/rafflepage"
 
 function PreSale(props){ 
@@ -9,8 +9,8 @@ function PreSale(props){
     const handleClose = () => setShow(false);
     
     const handleSubmit = async (e) => {
-        evt.preventDefault();
-        props.checkAddr(signture)
+        e.preventDefault();
+        props.checkAddr(signature)
     }
 
     return (
@@ -43,4 +43,4 @@ function PreSale(props){
       </>
     );
   }
-export default Presale
+export default PreSale
