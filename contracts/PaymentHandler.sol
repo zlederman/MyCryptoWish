@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
+import "@openzeppelin/contracts/utilities/cryptography/ECDSA.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -10,7 +11,9 @@ import "./MyWish.sol";
 
 contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
 
-    using Counters for Counters.Counter; 
+    using Counters for Counters.Counter;
+    using ECDSA for bytes32;
+
     enum ContractState {
         PRESALE,
         RAFFLE,
@@ -19,10 +22,13 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
         OPEN
     }
 
+    
     ContractState contractState;
     bytes32 public constant STATE_MANAGER_ROLE = keccak256("STATE_MANAGER_ROLE");
+    bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
     uint256 public randomnessOutput;
     bytes32 public requestId;
+    bytes32 public deployerAddressHash;
 
     IERC20 public immutable LINK_TOKEN;
     bytes32 internal immutable KEY_HASH;
@@ -35,6 +41,13 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
     uint256 immutable PRICE = 30000000000000000 wei;
     uint64 immutable TOKEN_CAP = 10000;
     uint16 immutable USER_TOKEN_CAP = 4;
+
+    //dates of importance
+    uint256 immutable RAFFLE_DATE = 0;
+    uint256 immutable PREMINT_DATE = 0;
+    uint256 immutable MINT_DATE = 0;
+    uint256 immutable OPEN_DATE= 0;
+
 
     bool raffleIsShuffled = false;
     bool entropySet = false;
@@ -67,7 +80,8 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
         address[] memory payees,
         bytes32 _LINK_KEY_HASH,
         address _LINK_ADDRESS,
-        address _LINK_VRF_COORDINATOR_ADDRESS
+        address _LINK_VRF_COORDINATOR_ADDRESS,
+        address deployerAddressHash
        ) 
        PaymentSplitter(payees, shares_)
        VRFConsumerBase(_LINK_VRF_COORDINATOR_ADDRESS, _LINK_ADDRESS)
@@ -76,9 +90,11 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
         KEY_HASH = _LINK_KEY_HASH;
         _myWishContract = MyWish(tokenAddress);
         makeAWish = payees[3];
+
         contractState = ContractState.PRESALE;
         _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
         _setRoleAdmin(STATE_MANAGER_ROLE, DEFAULT_ADMIN_ROLE);
+        _setRoleAdmin(WHITELIST_ROLE,DEFAULT_ADMIN_ROLE);
 
     }
 
@@ -171,8 +187,6 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
     }
 
 
-
-
     function getTokenAddress() external view returns(address) {
         return address(_myWishContract);
     }
@@ -234,13 +248,29 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
 
     }
 
-        function setStateManagerRole(address stateManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
+
+    function verify(bytes32 data, address account,bytes32 signature) pure returns (bool) {
+        require(hasRole(account,WHITELISTER_ROLE),"account isn't in whitelist role");
+        return keccack256(data)
+            .toEthSignedMessageHash()
+            .recover(signature) == account;
+    }
+
+    function setStateManagerRole(address stateManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
         require(stateManager != address(0),"Please Enter Valid Address");
         grantRole(STATE_MANAGER_ROLE,stateManager);
        
     }
 
 
+    function whiteListMint(bytes32 sig, bytes32 data,uint numTokens) public payable  {
+        require(verify(data, whiteListManagerAddr, sig),"Data not signed by whitelistManager");
+        whitelistee = address(data);
+        require(msg.send == whitelistee, "Not the sender of this signed address");
+        buyTokens(numTokens);
+
+
+    }
 
 
 

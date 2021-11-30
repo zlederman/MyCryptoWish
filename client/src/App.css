@@ -6,7 +6,7 @@
   text-align: center;
   overflow-y: scroll;
   height: 100%;
-  background-color: #121212;/*#7C83FD*/
+  background-color: #090918
  
 }
 html {
@@ -114,7 +114,7 @@ b {
 }
 
 .nav-link:hover {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.16), 0 10px 10px rgba(0,0,0,0.18);
+  background:#7C83FD
 }
 
 
@@ -170,8 +170,18 @@ b {
   text-align: left;
   
 }
+/* 
+  ######################################
 
+  PreSale Page 
 
+  ######################################
+*/
+
+.presale-container {
+  display: flex;
+  justify-content: center;
+}
 
 /* 
   ######################################
@@ -442,4 +452,28 @@ ul#members-list{
 }
 html, body {
   overscroll-behavior: none;
+}
+
+.modal-content > .timer-container  {
+  font-size: 100% !important;
+  margin-top: 0%;
+  box-shadow: none;
+  justify-content: space-evenly;
+
+}
+.modal-content > .timer-container > .time-container {
+  box-shadow: none;
+  background: none;
+}
+
+.modal-content > .timer-container > .time-container > .time-value > span {
+  font-size: 200%;
+}
+
+button > span {
+  font-weight:normal;
+  font-size: 100%;
+}
+.modal-footer {
+  border-top: 0px;
 }
