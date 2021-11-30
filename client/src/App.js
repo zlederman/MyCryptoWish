@@ -104,17 +104,18 @@ class App extends Component {
     return (
       <div className="App">
         <div>
-        <NightSky></NightSky>
+          <NightSky></NightSky>
         </div>
         <div>
           
           {this.renderSwitch(this.state.contractState)}
       
           <AboutPage/>
+           {/* <CardFooter handleClick={this.onClickHide.bind(this)}></CardFooter>   */}
         </div> 
       </div>
     );
   }
 }
 
-export default App;
+  export default App;

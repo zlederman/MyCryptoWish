@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./raffle.css"
-
 import logo from "./icons/logo.png"
 import { useEffect, useState } from "react";
 import image from "./star-sample.png"
@@ -157,7 +156,7 @@ const RaffleForm = (props) => {
                 </Form.Group>
 
              
-                <Button variant="primary" type="submit" onClick={handleSubmit}>
+                <Button variant="primary" style={{background: '#FDD644'}} type="submit" onClick={handleSubmit}>
                 Submit
                 </Button>
             </Form>

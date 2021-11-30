@@ -6,7 +6,7 @@
   text-align: center;
   overflow-y: scroll;
   height: 100%;
-  background-color: #090918
+  background-color: #0A0818; /*#121212;#7C83FD*/
  
 }
 html {
@@ -102,14 +102,17 @@ b {
   ######################################
 */
 
+.nav-bar-img {
+  height: 2vh;
+}
+
 .container#nav {
   display: inherit;
   justify-content: center;
-  
 }
 
 .nav-link {
-  color:white !important;
+  color:rgb(255, 255, 255) !important;
   border-radius: 9px;
 }
 
@@ -118,10 +121,10 @@ b {
 }
 
 
-
 .nav-link > h3 {
   font-weight: bolder !important;
-  font-size: 2rem;
+  font-size: .75rem;
+  z-index: 1000;
 }
 
 
@@ -221,10 +224,39 @@ b {
   ######################################
 */
 
-ul#members-list{
-  padding-left: 0;
-  list-style-type: none;
+
+.creator {
+  width: 100%;
+  border-bottom-left-radius: 20% !important;
+  display: flex;
+  flex-direction: row;
+  gap: 2%;
+
 }
+
+.creator-left-contianer {
+  width: 33%;
+}
+
+.creator-right-contianer {
+  width: 33%;
+  /* margin-left: 33%; */
+}
+
+.creator-center-contianer {
+  width: 33%;
+}
+
+.creator .card-img-top {
+  margin-top: 2.5%;
+  margin-left: 2.3%;
+}
+
+.creator img {
+  height: auto;
+  width: 95%;
+}
+
 .container#team {
   margin-top: 7.5%;
   justify-content: space-between;
@@ -240,14 +272,8 @@ ul#members-list{
   text-align: left;
 }
 
-
-.team-img-container{
-  display: flex;
-  flex-direction: column;
-}
 .top-container {
   display: flex;
-
   justify-content: space-around;
 }
 .bottom-container {
@@ -255,13 +281,25 @@ ul#members-list{
   flex-direction: row;
   justify-content: space-around;
 }
-.team-img-top,.team-img-bottom{
 
-  background-color: black;
-  width:8rem;
-  height:8rem;
+
+/* 
+  ######################################
+
+    Gallery  
+
+  ######################################
+*/
+.container#gallery {
+  margin-top: 7.5%;
+  justify-content: space-between;
+  gap:5%;
+  background-color: white;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.11), 0 6px 6px rgba(0,0,0,0.19);
+  padding: 5%;
+  border-radius: 9px;
+  
 }
-
 
 /* 
   ######################################
@@ -316,12 +354,10 @@ ul#members-list{
   margin-top: 5.5%;
 }
 
-
-
 .sky {
   position: relative;
-  width: 100%;
-  height: 100vh;
+  width:100%;
+  height: 100vh; /*40vh;*/ /*FIGURE HOW TO SCALE SIZE ON PHONE*/
   background: linear-gradient(#000957,#454768);
   overflow: hidden;
   background-attachment:fixed;
@@ -347,9 +383,17 @@ ul#members-list{
   }
 }
 
+.sky .MCWButton{
+  position:absolute;
+  left: 43%;
+  bottom: 17%;
+  z-index: 945;
+  
+}
+
 .background {
   width:100%;
-  height: 25vh; /*TO FIX WELL FROM FLOATING*/
+  height: auto; /*TO FIX WELL FROM FLOATING*/
   position: absolute;
   z-index: 950;
   bottom: 0;
@@ -368,10 +412,10 @@ ul#members-list{
 
 .well {
   animation: glow 2s infinite alternate;;
-  width: 20vh;
+  width: 30%;
   height: auto;
   position:absolute;
-  bottom: 13.9%;
+  bottom: 10%;
   left: 0;
   z-index: 940;
   right: 0;
@@ -380,11 +424,11 @@ ul#members-list{
 }
 
 .moon {
-  width: 10vh;
+  width: 10%;
   height: fixed;
   position: absolute;
   left: 10%;
-  top: 10vh;
+  top: 10%;
   z-index: 920;
   filter: drop-shadow(0px 0px 50px rgba(248, 248, 248, 0.699));
   pointer-events:none;
@@ -400,12 +444,13 @@ ul#members-list{
 }
 
 
+
 .cloud-one {
   width: 60%;
   height: 40%;
   left: 7%;
   /*bottom: 60%;*/
-  top: 2%; 
+  top: 7vh; 
   opacity: 75%;
   
 
@@ -416,7 +461,7 @@ ul#members-list{
   height: 40%;
   right: 50%;
   /*bottom: 65%;*/
-  top: 2%; 
+  top: 7vh; 
   opacity: 75%;
 }
 
@@ -424,7 +469,7 @@ ul#members-list{
   width: 60%;
 
   height: 40%;
-  top: 4%;
+  top: 8vh;
   opacity: 75%;
 }
 .cloud-four {
