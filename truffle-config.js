@@ -14,7 +14,7 @@ module.exports = {
     },
     kovan: {
       provider: () => {
-          return new HDWalletProvider(process.env.MNEMONIC_REAL, process.env.RPC_URL);
+          return new HDWalletProvider(process.env.MNEMONIC_REAL, process.env.WSS_URL);
       },
       network_id: '*'
     }

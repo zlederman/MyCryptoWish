@@ -14,7 +14,8 @@ const appServer = express();
 const redisClient = redis.createClient(process.env.REDIS_PORT,'127.0.0.1');
 const CONTRACT_ADDRESS = process.argv[2] ? process.argv[2] : process.env.CONTRACT_ADDRESS; //works when running build.sh
 const CONTRACT_ABI = require('./client/src/contracts/PaymentHandler.json'); 
-const RAFFLE_TOPIC = process.env.RAFFLE_TOPIC;
+const { str } = require('iter-tools');
+const RAFFLE_TOPIC = process.env.RAFFLE_TOPIC_SHUFFLED;
 
 
 const CONTRACT_OPTIONS = [
@@ -53,7 +54,7 @@ async function send(web3, gasPrice, transaction) {
 }
 
 const dates = {
-    'presale':new Date(2021,11,21,23,59),
+    'presale':new Date(2021,10,12,23,59),
     'raffle': new Date(2021,11,25,23,59),
     'premint':new Date(2021,11,26,23,59),
     'mint':new Date(2021,11,27,23,59),
@@ -63,39 +64,44 @@ const dates = {
 
   
     
-
+//these jobs manage the state of the contract
+//e.g. presale->raffle->premint->mint->open
 
 const setRaffleJob = schedule.scheduleJob(dates['raffle'],async() =>{
     
     const web3Instance = new web3(
-        new Web3.providers.WebsocketProvider(process.env.WSS_URL)
+        new web3.providers.WebsocketProvider(process.env.WSS_URL)
     );
     const contractInstance = new web3Instance.eth.Contract(CONTRACT_ABI.abi,CONTRACT_ADDRESS);
-    let transaction = await contractInstance.methods.setState(2);
+    let transaction = await contractInstance.methods.setContractState(1);
     let receipt = await send(web3Instance,12e6,transaction);
+    console.log(receipt)
 })
 const setPreMintJob = schedule.scheduleJob(dates['premint'],async() =>{
     const web3Instance = new web3(
-        new Web3.providers.WebsocketProvider(process.env.WSS_URL)
+        new web3.providers.WebsocketProvider(process.env.WSS_URL)
     );
     const contractInstance = new web3Instance.eth.Contract(CONTRACT_ABI.abi,CONTRACT_ADDRESS);
-    let transaction = await contractInstance.methods.setState(3);
+    let transaction = await contractInstance.methods.setContractState(2);
     let receipt = await send(web3Instance,12e6,transaction);
+    //turn off WS
+    //turn off Reds
 })
 const setMintJob = schedule.scheduleJob(dates['mint'],async() =>{
     const web3Instance = new web3(
-        new Web3.providers.WebsocketProvider(process.env.WSS_URL)
+        new web3.providers.WebsocketProvider(process.env.WSS_URL)
     );
     const contractInstance = new web3Instance.eth.Contract(CONTRACT_ABI.abi,CONTRACT_ADDRESS);
-    let transaction = await contractInstance.methods.setState(4);
+    let transaction = await contractInstance.methods.setContractState(3);
     let reciept = await send(web3Instance,12e6,transaction);
+    
 })
 const setOpenJob = schedule.scheduleJob(dates['open'],async ()=>{
     const web3Instance = new web3(
-        new Web3.providers.WebsocketProvider(process.env.WSS_URL)
+        new web3.providers.WebsocketProvider(process.env.WSS_URL)
     );
     const contractInstance = new web3Instance.eth.Contract(CONTRACT_ABI.abi,CONTRACT_ADDRESS);
-    let transaction = await contractInstance.methods.setState(5);
+    let transaction = await contractInstance.methods.setContractState(4);
     let reciept = await send(web3Instance,12e6,transaction);
 })
 
@@ -106,60 +112,68 @@ const report = (info) => {
 }
     
 
-ws.onopen = function(){
+
+ws.onopen = function (){
     report("opened connection to eth-node")
     ws.send(JSON.stringify(WS_OPTIONS))
 }
 ws.onmessage = async function (evt) {
     report('msg recieved from eth-node')
     json = JSON.parse(evt.data)
-    if(json['params']){
-        res = json.params.result
-        data = res.data.substr(2);
-        payload = parse(data);
-        report(payload)
-        await redisClient.set(
-           payload.address,
-           payload.raffleEntries.toString()
-        )
+    // if msg == shuffled
+    const web3Instance = new web3(new web3.providers.WebsocketProvider(WSS_URL));
+    const contractInstance = new web3Instance.eth.Contract(CONTRACT_ABI.abi,CONTRACT_ADDRESS);
+    const numEntries = await contractInstance.methods.getNumEntries();
+    let addrEntryMap = {};
 
-        //post payload to db
+    for(let i = 0; i < numEntries; i++){
+        let addr = await contractInstance.methods.getEntry(i);
+        addrEntryMap[addr] += str(i) + ",";
     }
+    await loadRedis(addrEntryMap);
+
+
+
+    // if(json['params']){
+    //     res = json.params.result
+    //     data = res.data.substr(2);
+    //     payload = parse(data);
+    //     report(payload)
+    //     await loadRedis(payload)
+
+    //     //post payload to db
+    // }
 }
+
+
 setInterval(()=>{
     ws.ping()
 },3.54e6)
 
-const parse = (data) => {
-    const size = 64
-    const numChunks = 3
-    raffleEntries = [];
-    let chunks = Array(3)
-    for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-        chunks[i] = data.substr(o, size)
-    } 
-    address = "0x" + chunks[0].substr(24);
-    numEntries = parseInt(chunks[1],16);
-    lastIndex = parseInt(chunks[2],16);
-    for(let i = 0; i < numEntries; i++){
-        raffleEntries.push(--lastIndex);
-    }
-    payload = {address: address, raffleEntries: raffleEntries};
-    return payload;
+// const parse = (data) => {
+//     const size = 64
+//     const numChunks = 3
+//     raffleEntries = [];
+//     let chunks = Array(3)
+//     for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
+//         chunks[i] = data.substr(o, size)
+//     } 
+//     address = "0x" + chunks[0].substr(24);
+//     numEntries = parseInt(chunks[1],16);
+//     lastIndex = parseInt(chunks[2],16);
+//     for(let i = 0; i < numEntries; i++){
+//         raffleEntries.push(--lastIndex);
+//     }
+//     payload = {address: address, raffleEntries: raffleEntries};
+//     return payload;
 
-}
+// }
 
-const loadRedis = async (payload) => {
-    let value = payload.raffleEntries.toString();
-    try {
-        value += await redisClient.get(payload.address);
-    }catch(e){
-        console.log(e)
-    }
-    await redisClient.set(
-        payload.address,
-        value
-     )
+const loadRedis = async (map) => {
+    map.foreach((addr,entries) => {
+        await redisClient.set(addr,entries)
+    })
+
 }
 ws.onclose = function () {
     // websocket is closed.

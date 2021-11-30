@@ -67,6 +67,7 @@ contract MyWish is AccessControl, ERC721Enumerable{
 
     function createCollectable(address to) public onlyRole(MINTER_ROLE)  returns(bool) {
         require(totalSupply() < _totalWishes, "Sale is over, all collectables sold."); //Might not need this one
+        require(balances[to] < _maxPurchaseAllowed,"too many tokens requested");
         safeMint(to, _tokenId.current());
         bool success = ownerOf(_tokenId.current()) == to;
         _tokenId.increment();

@@ -4,9 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PaymentHandlerContract from "./contracts/PaymentHandler.json";
 import getWeb3 from "./getWeb3";
 import AboutPage from "./components/about";
-import {Button} from "react-bootstrap"
+import Presale from "./components/Presale"
+import PremintModal from "./components/PreMint";
 import "./App.css";
-import RafflePage from "./components/rafflepage/rafflepage"
+import {RafflePage} from "./components/rafflepage/rafflepage"
 
 
 class App extends Component {
@@ -41,7 +42,9 @@ class App extends Component {
       );
       console.error(error);
       }
-      this.getContractState();
+      await this.getContractState();
+      console.log(this.state.contractState)
+      
   };
 
   getContractState = async () => {
@@ -50,11 +53,21 @@ class App extends Component {
     this.setState({contractState: state})
   }
 
+  validateSignature = async(sig,numTokens) => {
+    const {web3, accounts,contract} = this.state;
+    try {
+      const response = contract.methods.whiteListMint.call(sig,numTokens,{from:accounts[0]});
+    }catch(e){
+      alert("you are not validated for the white list")
+    }
+
+  }
+
   addToRaffle = async(num) => {
     const {web3, accounts,contract} = this.state;
     const price = await contract.methods.getPrice().call()  * num;
     const balance = await web3.eth.getBalance(accounts[0]);
-    if(balance < price/1e3){
+    if(balance < price){
       alert("Not Enough Eth To Be Verified ")
       return
     }
@@ -67,7 +80,26 @@ class App extends Component {
       const res = await contract.methods.buyToken().send({from: accounts[0],gas:300000, value: 3000000000000000000})
 
   };
+  
+ renderSwitch = (state) =>{ 
+   state = parseInt(state);
 
+    switch(state){
+      case 0:
+        console.log(state)
+        return <Presale validateSignature={this.validateSignature.bind(this)} />;
+      case 1:
+        return <RafflePage addToRaffle={this.addToRaffle.bind(this)}/>;
+      case 2:
+        return <PremintModal/>
+      case 3:
+        return <div/>
+      case 4:
+        return <div/>
+      default:
+        return <div/>
+    }
+  }
   render() {
     return (
       <div className="App">
@@ -75,8 +107,9 @@ class App extends Component {
           <NightSky></NightSky>
         </div>
         <div>
-          {this.state.contractState == 2 ? <RafflePage addToRaffle={this.addToRaffle.bind(this)} /> : <div/>}
-          {/* <RafflePage/> */}
+          
+          {this.renderSwitch(this.state.contractState)}
+      
           <AboutPage/>
            {/* <CardFooter handleClick={this.onClickHide.bind(this)}></CardFooter>   */}
         </div> 

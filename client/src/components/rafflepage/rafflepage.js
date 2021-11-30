@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./raffle.css"
-//import env from "react-dotenv"
 import logo from "./icons/logo.png"
 import { useEffect, useState } from "react";
 import image from "./star-sample.png"
@@ -15,8 +14,7 @@ const RafflePage = (props) => {
             <div className="left-container">
                 <TimerContainer/>
                 <RaffleForm addToRaffle={props.addToRaffle} ></RaffleForm>
-
-               
+                
             </div>
             <div className="right-container">
                 <Card style={{ width: 'auto', height: 'auto', right: '12%'}}>
@@ -40,7 +38,7 @@ const RafflePage = (props) => {
 function TimerContainer() {
     const calculateTimeLeft = () => {
       let year = new Date().getFullYear();
-      const difference = +new Date(`${year}-11-17`) - +new Date();
+      const difference = + new Date(`${year}-11-17`) - +new Date();
       let timeLeft = {};
   
       if (difference > 0) {
@@ -151,4 +149,5 @@ const RaffleForm = (props) => {
                 </div>
     )
 }
-export default RafflePage
+
+export  {RafflePage, TimerContainer};

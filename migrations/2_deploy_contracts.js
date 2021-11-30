@@ -20,7 +20,7 @@ module.exports = async function(deployer,network,accounts) {
     VRFCOORDINATOR
   );
   const paymentHandlerInstance = await paymentHandler.deployed();
-  const stateManager = deployer.network == "development" ? accounts[0] : process.env.MY_ADDRESS;
+  const stateManager = (deployer.network == "development" ? accounts[0] : process.env.MY_ADDRESS);
   await paymentHandlerInstance.setStateManagerRole(stateManager);
 
   await myWishInstance.setMinterRole(paymentHandlerInstance.address);
