@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PaymentHandlerContract from "./contracts/PaymentHandler.json";
 import getWeb3 from "./getWeb3";
 import AboutPage from "./components/about";
+import IntroPage from "./components/intro";
+import Footer from "./components/Footer";
 import Presale from "./components/Presale"
 import PremintModal from "./components/PreMint";
 import "./App.css";
@@ -107,10 +109,15 @@ class App extends Component {
           <NightSky></NightSky>
         </div>
         <div>
-          
+          <IntroPage/>
           {this.renderSwitch(this.state.contractState)}
-      
+          
+          {/* <RafflePage/> */}
           <AboutPage/>
+          <div>
+            <Footer/>
+          </div>
+          
            {/* <CardFooter handleClick={this.onClickHide.bind(this)}></CardFooter>   */}
         </div> 
       </div>

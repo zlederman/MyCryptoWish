@@ -38,21 +38,22 @@
 .left-arrow, .right-arrow {
     position: absolute;
     z-index: 1;
-    top: 50%;
+    top: 107%;
     transform: translateY(-50%);
-    width: 48px;
-    height: 48px;
-    border-radius: 24px;
-    background-color: white;
-    border: 1px solid #ddd;
+    width: 10%;
+    border-radius: 12px;
+    background-color: #FDD644;
+    border: 1px solid #FDD644;
 }
 
 .left-arrow {
-    left: 24px;
+    left: 5px;
+    height: fit-content;
 }
 
 .right-arrow {
-    right: 24px;
+    right: 5px;
+    height: fit-content;
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -66,9 +67,9 @@
 }
 
 .carousel-content.show-3 > * {
-    width: calc(100% / 4);
+    width: calc(100% / 3);
 }
 
 .carousel-content.show-4 > * {
-    width: calc(100% / 4);
+    width: calc(100% / 3);
 }

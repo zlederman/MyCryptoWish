@@ -1,32 +1,36 @@
 import React, { Component } from "react";
 import "./raffle.css"
-import logo from "./icons/logo.png"
 import { useEffect, useState } from "react";
-import image from "./star-sample.png"
-import twitter from "./icons/iconmonstr-twitter-1.svg"
-import discord from "./icons/Discord-Logo-Black.svg"
 import {Form,Button,Row,Col, Card} from "react-bootstrap"
+import sample from "./star-sample.png"
+import Cowboy from "./icons/cowboy.png"
 
-const RafflePage = (props) => {
+// import einstein from "../assets/einstein.png"
+// import fireman from "../assets/Fireman.png"
+// import ninja from "../assets/ninja.png"
+// import rainbow from "../assets/rainbow.png"
+// import seb from "./assets/seb.png"
+
+const RafflePage = (props) => {  
 
     return (
-        <div className="raffle-page">
+        <div className="raffle-page" id="raffle-form">
             <div className="left-container">
                 <TimerContainer/>
                 <RaffleForm addToRaffle={props.addToRaffle} ></RaffleForm>
                 
             </div>
             <div className="right-container">
-                <Card style={{ width: 'auto', height: 'auto', right: '12%'}}>
-                    <Card.Img variant="top" src={image}/>
-                    <Card.Body>
-                        <Card.Title>Wish #acfr43df</Card.Title>
-                        <Card.Text>
-                            A mystical star with hair so fly, they're in space
-                        </Card.Text>
-                    
-                    </Card.Body>
-                </Card>
+            <Card style={{ width: 'auto', height: 'auto', right: '12%', borderRadius: '10px'}}>
+                <Card.Img style={{ width: '92%', height: 'auto', right: '12%', borderRadius: '10px'}} variant="top" src={Cowboy}/>
+                <Card.Body>
+                    {/* <Card.Title>Wish #MY Cryco Ti </Card.Title> */}
+                    <Card.Text>
+                        <b>100 percent</b> of profits and future royalties go to <b>Make-A-Wish Foundation</b>. 
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+                {/* <CardImage/> */}
             </div>
         </div>
 
@@ -35,10 +39,54 @@ const RafflePage = (props) => {
     )
 }
 
+// function CardImage() {
+//     const state = {
+//         currentImage: 0,
+//         images: [
+//         //   einstein, 
+//         //   fireman, 
+//         //   ninja, 
+//         //   seb
+//         ]
+//       };
+    
+
+//     const switchImage = () => {
+//         if (this.state.currentImage < this.state.images.length - 1) {
+//             this.setState({
+//             currentImage: this.state.currentImage + 1
+//             });
+//         } else {
+//             this.setState({
+//             currentImage: 0
+//             });
+//         }
+//         return this.currentImage;
+//     };
+
+//     componentDidMount(() => {
+//         setInterval(switchImage(), 200);
+//     }); 
+
+//     return (
+//         <Card style={{ width: 'auto', height: 'auto', right: '12%'}}>
+//             <Card.Img variant="top" src={this.state.images[this.state.currentImage]}/>
+//             <Card.Body>
+//                 <Card.Title>Wish #acfr43df</Card.Title>
+//                 <Card.Text>
+//                     A mystical star with hair so fly, they're in space
+//                 </Card.Text>
+//             </Card.Body>
+//         </Card>
+
+//     ); 
+
+// }
+
 function TimerContainer() {
     const calculateTimeLeft = () => {
       let year = new Date().getFullYear();
-      const difference = + new Date(`${year}-11-17`) - +new Date();
+      const difference = + new Date(`${year}-12-10`) - +new Date();
       let timeLeft = {};
   
       if (difference > 0) {
@@ -89,10 +137,6 @@ function TimerContainer() {
       </div>
     );
   }
-  
-//<Form.Label column sm={2}>Discord</Form.Label>
-//<Form.Label column sm={2}>Twitter</Form.Label>
-
 
 const RaffleForm = (props) => {
     const [quantity, setQuantity] = useState(1);
@@ -106,35 +150,13 @@ const RaffleForm = (props) => {
     return (
         <div className="form-container" >
             <div className="info-container" id="raffle">
-                <h1>Our Raffle Is Live!</h1>
-                <h3>Enter and your wish might just come true</h3>
+              <h2 className="section-heading"><i>Make Your Wish</i></h2>  
             </div>
           
             <Form>
-                <Form.Group  as={Row}  controlId="formBasicEmail">
-                    
-                    <Col>
-                    <Form.Control type="email" placeholder="Discord Username"  />
-                    </Col>
-                    
-                    <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                    </Form.Text>
-                </Form.Group>
-
-                <Form.Group  as={Row}  controlId="formBasicEmail">
-                    
-                    <Col>
-                    <Form.Control type="email" placeholder="Twitter Handle"  />
-                    </Col>
-                    
-                    <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                    </Form.Text>
-                </Form.Group>
                 <Form.Group as={Row} controlId="formGridState" id="Selector">
                     <Form.Label>Wish Quantity</Form.Label>
-                    <Form.Control as="select" defaultValue="1"  onChange={e => setQuantity(e.target.value)}>
+                    <Form.Control className="form" as="select" defaultValue="Choose..."  onChange={e => setQuantity(e.target.value)}>
                         <option>Choose...</option>
                         <option>1</option>
                         <option>2</option>
@@ -142,7 +164,7 @@ const RaffleForm = (props) => {
                         <option>4</option>
                     </Form.Control>
                 </Form.Group>
-                <Button variant="primary" style={{background: '#FDD644'}} type="submit" onClick={handleSubmit}>
+                <Button variant="primary" style={{background: '#FDD644', borderColor: '#FDD644', color:'#0A0818'}} type="submit" onClick={handleSubmit}>
                 Submit
                 </Button>
             </Form>
