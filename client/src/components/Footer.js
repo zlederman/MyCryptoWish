@@ -19,19 +19,25 @@ const Footer = () => {
                         <img  className="footer-logo" src={mcw}/>
                     </div>
                     <div className="col">
-                        <img  className="footer-svg" src={instagram}/>
+                        <a href="https://www.instagram.com/my_cryptowish/">
+                        <img className="footer-svg" src={instagram}/>
+                        </a>
                     </div>
                     <div className="col">
-                        <img  className="footer-svg" src={twitter}/>
+                        <a href="https://twitter.com/my_cryptowish">
+                            <img className="footer-svg" src={twitter}/>
+                        </a> 
                     </div>
                     <div className="col">
-                        <img  className="footer-svg" src={linkedIn}/>
+                        <a href="https://www.linkedin.com/company/mycryptowish/about/?viewAsMember=true">
+                        <img className="footer-svg" src={linkedIn}/>
+                        </a>
                     </div>
                 </div>
                 <hr />
                 <div className="row">
                     <p className="col-sm" style={{ color: 'white'}}>
-                        &copy;{new Date().getFullYear()} MyCryptoWish LLC | All Rights Reserved | Terms Of Service | Privacy
+                        {new Date().getFullYear()} MyCryptoWish LLC | All Rights Reserved | Terms Of Service | Privacy
                     </p>
                 </div>
             </div>

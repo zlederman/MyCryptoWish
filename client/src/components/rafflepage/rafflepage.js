@@ -26,7 +26,7 @@ const RafflePage = (props) => {
                 <Card.Body>
                     {/* <Card.Title>Wish #MY Cryco Ti </Card.Title> */}
                     <Card.Text>
-                        <b>100 percent</b> of profits and future royalties go to <b>Make-A-Wish Foundation</b>. 
+                        <b>100% of profit</b> and secondary royalty go directly to <b> St. Jude Children’s Research Hospital</b>. 
                     </Card.Text>
                 </Card.Body>
             </Card>
@@ -83,10 +83,19 @@ const RafflePage = (props) => {
 
 // }
 
+//IMPORTANT
+//1. block off with nonce -> unique to every signnature
+//2. check to see if the nonce is used
+//3. can only use nonce once
+//4. only sign if they are a winner 
+//5. Sign with string and has to have that version number clear what signatures are for
+//6. Maybe have a way to change that version 
+
+
 function TimerContainer() {
     const calculateTimeLeft = () => {
       let year = new Date().getFullYear();
-      const difference = + new Date(`${year}-12-10`) - +new Date();
+      const difference = + new Date(`${year}-1-30`) - +new Date();
       let timeLeft = {};
   
       if (difference > 0) {
@@ -133,7 +142,7 @@ function TimerContainer() {
 
     return (
       <div className="timer-container">
-        {timerComponents.length ? timerComponents : <span>Time's up!</span>}
+        {timerComponents.length ? timerComponents : <span>Countdown begins at 10,000 on Discord</span>}
       </div>
     );
   }
@@ -165,7 +174,7 @@ const RaffleForm = (props) => {
                     </Form.Control>
                 </Form.Group>
                 <Button variant="primary" style={{background: '#FDD644', borderColor: '#FDD644', color:'#0A0818'}} type="submit" onClick={handleSubmit}>
-                Submit
+                Enter Raffle
                 </Button>
             </Form>
                 </div>

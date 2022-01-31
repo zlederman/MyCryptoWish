@@ -54,19 +54,16 @@ class AboutPage extends Component{
                 <div className="container" id="page">                   
                     <div className="container" id="brief">
                         <div className="brief-p"> 
-                            <h2 className="section-heading"><b><i>Your Wish Is My Command</i></b></h2>               
+                            <h2 className="section-heading"><b><i>Hope for a Brighter Future Starts With a Wish</i></b></h2>               
                             <p>
-                            By purchasing a MyCryptoWish Star, you are guaranteed to be granting the wishes of 
-                            critically ill children by supporting the Make-A-Wish Foundation. 
-
- 
+                            MyCryptoWish Star ownership comes with a promise of transparent charitable giving and membership in
+                            a community of altruistic NFT holders seeking to revolutionize philanthropy through blockchain technology. 
                             </p>
 
                             <p>
-                            While MyCryptoWish cannot guarantee that your personal wish comes true, research has 
-                            shown that Make-A-Wish Wishes help improve and even save the lives of sick children, 
-                            so your NFT will actively change the world for these kids and their families.
-
+                            While MyCryptoWish cannot guarantee that your personal wish comes true, we guarantee that your wish will 
+                            help grant the wish of health for critically-ill children around the world by directly supporting St. 
+                            Jude’s mission to end childhood cancer.
                             </p>
                         </div>
                         <div className="brief-img" style={{background: '#7C83FD'}}>
@@ -100,10 +97,10 @@ class AboutPage extends Component{
                                             <Card.Title style={{ color: '#0A0818'}}>CEO</Card.Title>  
                                             
                                         </Card.Body>
-                                        <div className="card-button">
+                                        {/* <div className="card-button">
                                             <Button style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
                                             <Button href="https://www.linkedin.com/in/evangolinsky142/" style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={linkedIn}/></Button>
-                                        </div>
+                                        </div> */}
                                     </Card>
                                 </div>
                                 <div className="creator-contianer">
@@ -113,10 +110,10 @@ class AboutPage extends Component{
                                             <Card.Title style={{ color: '#0A0818'}}>@Zachary_Lederman</Card.Title>
                                             <Card.Title style={{ color: '#0A0818'}}>CTO</Card.Title>
                                         </Card.Body>
-                                        <div className="card-button">
+                                        {/* <div className="card-button">
                                             <Button style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
                                             <Button href="https://www.linkedin.com/in/zachary-lederman/" style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={linkedIn}/></Button>
-                                        </div>
+                                        </div> */}
                                     </Card>
                                 </div>
                                 <div className="creator-contianer">
@@ -126,10 +123,10 @@ class AboutPage extends Component{
                                             <Card.Title style={{ color: '#0A0818'}}>@BalthroJawns</Card.Title>
                                             <Card.Title style={{ color: '#0A0818'}}>CTO</Card.Title>
                                         </Card.Body>
-                                        <div className="card-button">
+                                        {/* <div className="card-button">
                                             <Button href="https://www.instagram.com/sebmelendez/" style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
                                             <Button href="https://www.linkedin.com/in/sebastian-melendez-56a7881b3/" style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={linkedIn}/></Button>
-                                        </div>
+                                        </div> */}
                                     </Card>
                                 </div>
                                 <div className="creator-contianer">
@@ -139,10 +136,10 @@ class AboutPage extends Component{
                                             <Card.Title style={{ color: '#0A0818'}}>@Cristina_Gonzalez</Card.Title>
                                             <Card.Title style={{ color: '#0A0818'}}>Artist</Card.Title>
                                         </Card.Body>
-                                        <div className="card-button">
+                                        {/* <div className="card-button">
                                             <Button style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
                                             <Button style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={linkedIn}/></Button>
-                                        </div>
+                                        </div> */}
                                     </Card>
                                 </div>
 
@@ -200,11 +197,10 @@ class AboutPage extends Component{
                                     <h2 className="section-heading"><b><i>Purchase Guide</i></b></h2>
                                     <div>
                                         <ul id="purchase-steps">
-                                            <li><b>Step 1:</b> Acquire Ethereum! (0.05 ETH) to make a wish</li>
+                                            <li><b>Step 1:</b> Join Discord</li>
                                             <li><b>Step 2:</b> Install Metamask (On supported Browser)</li>
-                                            <li><b>Step 3:</b> Find Your Wallet Secret</li>
-                                            <li><b>Step 4:</b> Load Your Wallet Secret Into Metamask</li>
-                                            <li><b>Step 5:</b> Make your wish!</li> 
+                                            <li><b>Step 3:</b> Deposit .05 ETH plus gas per wish into Metamask</li>
+                                            <li><b>Step 4:</b> Make your wish!</li> 
                                             {/* 5% for raffles */}
                                         </ul>
                                     </div>
@@ -212,10 +208,10 @@ class AboutPage extends Component{
                         </div>
                         <div className="links">
                             <div className="link" id="coinbase">
-                                <a className="hyperlink"href="https://www.coinbase.com/"><b>coinbase.com</b></a>
+                                <a className="hyperlink"href="https://discord.gg/5YF2mChwkR"><b>Join Discord</b></a>
                             </div>
                             <div className="link" id="metamask">
-                                <a className="hyperlink"href="https://metamask.io/"><b>metamask.io</b></a>
+                                <a className="hyperlink"href="https://metamask.io/"><b>Metamask</b></a>
                             </div>
                         </div>
                     </div>

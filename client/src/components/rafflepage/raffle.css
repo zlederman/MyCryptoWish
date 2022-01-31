@@ -162,8 +162,6 @@ h3 {
         margin-top: 10%;
     }
 
-  
-
     .timer-container {
         background: #7C83FD;
         align-self: center;
@@ -177,8 +175,7 @@ h3 {
 
     .time-container {
         border-radius: 9px;
-        font-size: 60%;
-        background-color: #7C83FD;
+        font-size: 50%;
         padding-right: 5%;
         padding-left: 5%;
         padding-bottom: 5%;

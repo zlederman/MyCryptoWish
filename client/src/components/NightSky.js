@@ -11,6 +11,9 @@ import "../App.css"
 
 
 class NightSky extends Component{
+    constructor(props) {
+        super(props);
+    }
     
 
     state = {stars: []}
@@ -62,11 +65,11 @@ class NightSky extends Component{
     render() {
         return <div onClick={this.onClick} className="sky">
             <div className="container" id="nav" >
-                <div className="contianer-nav-button">
-                        <Button style={{background: 'transparent', borderColor: 'transparent', paddingBottom: '10px'}}><img className="nav-bar-img" src={discord}/></Button>
+                {/* <div className="contianer-nav-button">
+                        <Button href="https://discord.gg/5YF2mChwkR" style={{background: 'transparent', borderColor: 'transparent', paddingBottom: '10px'}}><img className="nav-bar-img" src={discord}/></Button>
                         <Button style={{background: 'transparent', borderColor: 'transparent', paddingBottom: '10px'}}><img className="nav-bar-img" src={twitter}/></Button>
-                        <Button class="enableEthereumButton" variant="dark" style={{background: '#FDD644', fontSize: 10, fontWeight: 'bolder'}}>Connect Wallet</Button> {/*position: 'relative', top: '10px', */}
-                </div>
+                        <Button href="https://discord.gg/5YF2mChwkR" class="enableEthereumButton" variant="dark" style={{background: '#FDD644', color:'#0A0818', fontSize: 10, fontWeight: 'bolder'}}>Discord</Button> position: 'relative', top: '10px',
+                </div> */}
 
                 <div className="contianer-navBar"> 
                     <Navbar collapseOnSelect expand="lg" bg="transparent">
@@ -79,7 +82,8 @@ class NightSky extends Component{
                                 <Nav.Link className="nav-item" href="#team"><h3>TEAM</h3></Nav.Link>
                                 <Nav.Link className="nav-item" href="#gallery"><h3>GALLERY</h3></Nav.Link>
                                 <Nav.Link className="nav-item" href="#purchase-guide"><h3>HOW TO PURCHASE</h3></Nav.Link>
-                                <Nav.Link className="nav-item" href="https://wish.org/"><h3>MAKE-A-WISH</h3></Nav.Link>                           
+                                <Nav.Link href="https://www.stjude.org/donate/crypto.html#1b3812bc663160deb8f3c14f52a5b8e086f434aa0b3eb347aaf3d1e79bf257ee=7" className="nav-item"><h3>ST. JUDE</h3></Nav.Link> 
+                                <Button href="https://discord.gg/5YF2mChwkR" class="enableEthereumButton" variant="dark" style={{background: '#FDD644', color:'#0A0818', fontWeight: 'bolder'}}>Discord</Button>                          
                             </Nav>
                         </Navbar.Collapse>
                         </Container>
@@ -90,11 +94,11 @@ class NightSky extends Component{
             </div>
             
             <img  className="background" src={grass}/>
-            <img  className="moon" src={moon}/>
+            {/* <img  className="moon" src={moon}/> */}
             <img  className="mcw" src={mcw}/>
             <img className="well" src={well}/>
             <div className="MCWButton">
-                <Button href="#raffle-form" variant="dark" style={{background: '#A39761',  borderColor: '#FDD644'}}>Make Your Wish</Button>  
+                <Button href="https://discord.gg/5YF2mChwkR" className="raffleButton" style={{background: '#A39761',  borderColor: 'transparent', fontSize: '1.8vw', borderWidth: '3px'}}>Join Discord</Button>  
             </div>
             
             
