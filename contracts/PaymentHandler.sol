@@ -26,6 +26,8 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
     ContractState contractState;
     bytes32 public constant STATE_MANAGER_ROLE = keccak256("STATE_MANAGER_ROLE");
     bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
+
+
     uint256 public randomnessOutput;
     bytes32 public requestId;
     bytes32 public deployerAddressHash;
@@ -67,7 +69,7 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
 
     mapping(address => uint16) tokensPerUser;
     mapping(uint16 => bool) ticketsClaimed;
-    address[] raffleEntries;
+ 
     
     event fundsAccepted(address from);
     event enteredRaffle(address from ,uint16 numTokens,uint256 lastIndex);
@@ -98,93 +100,93 @@ contract PaymentHandler is AccessControl, PaymentSplitter, VRFConsumerBase {
 
     }
 
-    function enterRaffle(uint16 numTokens)
-    public
-    {
-        require(contractState == ContractState.RAFFLE, "Raffle is not active");
-        require(tokensPerUser[msg.sender] + numTokens < USER_TOKEN_CAP,"Please request fewer tokens");
+    // function enterRaffle(uint16 numTokens)
+    // public
+    // {
+    //     require(contractState == ContractState.RAFFLE, "Raffle is not active");
+    //     require(tokensPerUser[msg.sender] + numTokens < USER_TOKEN_CAP,"Please request fewer tokens");
       
-        tokensPerUser[msg.sender] += numTokens;
-        for(uint i = 0; i < numTokens; i++){
-            raffleEntries.push(msg.sender);
-            raffleCount.increment();
+    //     tokensPerUser[msg.sender] += numTokens;
+    //     for(uint i = 0; i < numTokens; i++){
+    //         raffleEntries.push(msg.sender);
+    //         raffleCount.increment();
            
-        }
+    //     }
         
-        emit enteredRaffle(msg.sender, numTokens, raffleCount.current());
+    //     emit enteredRaffle(msg.sender, numTokens, raffleCount.current());
 
-    }
+    // }
     
-    function shuffleEntries() public {
-        require(contractState == ContractState.PREMINT,"Raffle Is Still Active");
-        require(raffleCount.current() > TOKEN_CAP,"No need to shuffle");
-        require(entropySet, "No randomness to shuffle with");
+    // function shuffleEntries() public {
+    //     require(contractState == ContractState.PREMINT,"Raffle Is Still Active");
+    //     require(raffleCount.current() > TOKEN_CAP,"No need to shuffle");
+    //     require(entropySet, "No randomness to shuffle with");
 
-        for (uint256 i = 0; i < raffleCount.current(); i++) {
-            // Generate a random index to select from
-            uint256 randomIndex = i + entropy % (raffleCount.current() - i);
-            // Collect the value at that random index
-            address randomTmp = raffleEntries[randomIndex];
-            // Update the value at the random index to the current value
-            raffleEntries[randomIndex] = raffleEntries[i];
-            // Update the current value to the value at the random index
-            raffleEntries[i] = randomTmp;
-        }
+    //     for (uint256 i = 0; i < raffleCount.current(); i++) {
+    //         // Generate a random index to select from
+    //         uint256 randomIndex = i + entropy % (raffleCount.current() - i);
+    //         // Collect the value at that random index
+    //         address randomTmp = raffleEntries[randomIndex];
+    //         // Update the value at the random index to the current value
+    //         raffleEntries[randomIndex] = raffleEntries[i];
+    //         // Update the current value to the value at the random index
+    //         raffleEntries[i] = randomTmp;
+    //     }
 
-        raffleIsShuffled = true;
-        emit raffleShuffled(raffleEntries.length);
+    //     raffleIsShuffled = true;
+    //     emit raffleShuffled(raffleEntries.length);
 
-    }
+    // }
 
-    function setEntropy() public {
+    // function setEntropy() public {
         
-        require(contractState == ContractState.PREMINT,'raffle is still active');
-        require(!entropySet,'Entropy is already set, no need');
+    //     require(contractState == ContractState.PREMINT,'raffle is still active');
+    //     require(!entropySet,'Entropy is already set, no need');
         
-        requestRandomness(KEY_HASH, 2e18);
+    //     requestRandomness(KEY_HASH, 2e18);
 
-    }
+    // }
 
-    function buyTokens(uint16 numTokens) payable public {
-        require(numTokens * PRICE == msg.value,"Incorrect Amount Submitted");
+    // function buyTokens(uint16 numTokens) payable public {
+    //     require(numTokens * PRICE == msg.value,"Incorrect Amount Submitted");
 
-        bool success = _myWishContract.createCollectable(msg.sender);
-        emit tokensPurchased(msg.sender, numTokens);
-    }
+    //     bool success = _myWishContract.createCollectable(msg.sender);
+    //     emit tokensPurchased(msg.sender, numTokens);
+    // }
 
 
-    function isWinner(uint16[] calldata tickets) public { 
-        require(contractState == ContractState.MINTING ,"Minting state needs to be active");
-        require(raffleEntries.length > TOKEN_CAP, "Everybody is a winner");
-        if(raffleEntries.length > TOKEN_CAP) {
-            require(raffleIsShuffled,"please shuffle winners before minting");
-        }
+    // function isWinner(uint16[] calldata tickets) public { 
+    //     require(contractState == ContractState.MINTING ,"Minting state needs to be active");
+    //     require(raffleEntries.length > TOKEN_CAP, "Everybody is a winner");
+    //     if(raffleEntries.length > TOKEN_CAP) {
+    //         require(raffleIsShuffled,"please shuffle winners before minting");
+    //     }
 
-        uint16 winningTicketCount = 0;
-        for(uint i = 0; i < tickets.length; i++){
-            require(tickets[i] < raffleEntries.length,"Not a valid ticket");
-            require(!ticketsClaimed[tickets[i]],"Tickets have already been claimed");
-            require(raffleEntries[tickets[i]] == msg.sender, "Not the owner of these tickets");
-            ticketsClaimed[tickets[i]] = true;
-            if(tickets[i] < TOKEN_CAP){
-                winningTicketCount += 1;
-            }
+    //     uint16 winningTicketCount = 0;
+    //     for(uint i = 0; i < tickets.length; i++){
+    //         require(tickets[i] < raffleEntries.length,"Not a valid ticket");
+    //         require(!ticketsClaimed[tickets[i]],"Tickets have already been claimed");
+    //         require(raffleEntries[tickets[i]] == msg.sender, "Not the owner of these tickets");
+    //         ticketsClaimed[tickets[i]] = true;
+    //         if(tickets[i] < TOKEN_CAP){
+    //             winningTicketCount += 1;
+    //         }
      
-        }
-        if(winningTicketCount < tickets.length){
-            tokensPerUser[msg.sender] = winningTicketCount;
-        }
-        emit ticketsRedeemed(msg.sender, winningTicketCount);
+    //     }
+    //     if(winningTicketCount < tickets.length){
+    //         tokensPerUser[msg.sender] = winningTicketCount;
+    //     }
+    //     emit ticketsRedeemed(msg.sender, winningTicketCount);
 
-    }
+    // }
     
 
-    function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-        require(raffleEntries.length > TOKEN_CAP, "No need to shuffle addresses");
-        require(!entropySet,"entropy already set");
-        entropy = randomness;
-        entropySet = true;
-    }
+    // function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
+    //     require(raffleEntries.length > TOKEN_CAP, "No need to shuffle addresses");
+    //     require(!entropySet,"entropy already set");
+    //     entropy = randomness;
+    //     entropySet = true;
+    // }
 
 
     function getTokenAddress() external view returns(address) {

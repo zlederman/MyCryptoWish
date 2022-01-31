@@ -32,14 +32,15 @@ class NightSky extends Component{
         let size_svg = 10
         return React.createElement("svg",{
             className: "svg", 
-            style:{
+            style: {
                 left: x +"px",
                 top: y + "px",
                 width: 1 + size_svg + "px",
                 height: 1 + size_svg +"px",
                 animationDuration: 5 + duration + "s",
                 animationDelay: duration+'s',
-            }
+            },
+            key : i,
            
         },
         React.createElement("polygon",

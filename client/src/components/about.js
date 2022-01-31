@@ -14,6 +14,7 @@ import christina from "../assets/christina.png"
 import discord from "./rafflepage/icons/Discord-Logo-Black.svg"
 import twitter from "./rafflepage/icons/iconmonstr-twitter-1.svg"
 import instagram from "./rafflepage/icons/instagram.svg"
+import github from "./rafflepage/icons/github.png"
 import linkedIn from "./rafflepage/icons/linkedin.svg"
 
 
@@ -101,7 +102,7 @@ class AboutPage extends Component{
                                             
                                         </Card.Body>
                                         <div className="card-button">
-                                            <Button style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
+                                            <Button  style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
                                             <Button href="https://www.linkedin.com/in/evangolinsky142/" style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={linkedIn}/></Button>
                                         </div>
                                     </Card>
@@ -114,8 +115,8 @@ class AboutPage extends Component{
                                             <Card.Title style={{ color: '#0A0818'}}>CTO</Card.Title>
                                         </Card.Body>
                                         <div className="card-button">
-                                            <Button style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
-                                            <Button href="https://www.linkedin.com/in/zachary-lederman/" style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={linkedIn}/></Button>
+                                            <Button href="https://www.github.com/zlederman" style={{background: 'transparent', borderColor: 'transparent', width: '37.5%'}}><img className="card-img" src={github}/></Button>
+                                            <Button href="https://www.linkedin.com/in/zachary-lederman/" style={{background: 'transparent', borderColor: 'transparent', width: '37.5%'}}><img className="card-img" src={linkedIn}/></Button>
                                         </div>
                                     </Card>
                                 </div>

@@ -5,41 +5,72 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
+import "@openzeppelin/contracts/utilities/cryptography/ECDSA.sol";
 
 
-//Mint at gas cost\
-//How are they paying
-//Need them 
-//Get a raffle ticket
-//sign with the raffle ticket
-//can then pay
-
-//NEED TO CHANGE CONTRACT
-
-
-contract MyWish is AccessControl, ERC721Enumerable{
+contract MyWish is AccessControl, ERC721Enumerable, PaymentSplitter {
     
+    //counters 
     using Counters for Counters.Counter; 
     using SafeMath for uint256; 
-    
+    using ECDSA for bytes32;
+    //signatures
+
+    address whiteListManagerAddr;
+    address beneficiaryAddress = address(0); //temporary
+    //contract state enum
+    enum ContractState {
+        PRESALE,
+        RAFFLE,
+        PREMINT,
+        MINTING,
+        OPEN
+    }
+    ContractState contractState;
+    //paymentsplitting
+    uint16 immutable zachIndex = 0;
+    uint16 immutable evanIndex = 2;
+    uint16 immutable sebIndex = 1;
+    uint16 immutable wishIndex = 3;
+
+    uint16 immutable sebShares = 2;
+    uint16 immutable zachShares = 2;
+    uint16 immutable evanShares = 6;
+    uint16 immutable beneficiaryShares = 90;
+
+    uint256[] shares_ = [sebShares, zachShares, evanShares, beneficiaryShares];
+    //events
+    event contractStateChanged(ContractState from, ContractState to);
+    event tokensPurchased(uint16 numTokens, address buyer);
 
     Counters.Counter private _tokenId; 
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant BASEURI_ROLE = keccak256("BASEURI_ROLE");
-    uint256 public constant _totalWishes = 10000; 
-    uint256 public constant _maxPurchaseAllowed = 20; 
 
+    //roles
+    bytes32 public constant STATE_MANAGER_ROLE = keccak256("STATE_MANAGER_ROLE");
+    bytes32 public constant BASEURI_ROLE = keccak256("BASEURI_ROLE");
+    bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
+
+    //pricing
+    uint256 constant PRICE = 0.03 ether;
+    uint256 public constant maxSupply = 10000; 
+    uint256 public constant maxPurchaseAllowed = 5;
+    
+    //balances
     mapping(address => uint256)public balances;
+
+
     string  __name = "MyWish";
     string _baseURIextended = 'WE NEED IPFS';
     
-    //Add mapping token URIs
 
 
-    constructor() ERC721("MyWish","WSH") {
+    constructor() 
+    ERC721("MyWish","WSH")
+    PaymentSplitter(payees,shares_)
+    {
+        payees[3] = beneficiaryAddress;
         _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
-        _setRoleAdmin(MINTER_ROLE, DEFAULT_ADMIN_ROLE);
-        // need to set this role up
         _setRoleAdmin(BASEURI_ROLE,DEFAULT_ADMIN_ROLE);
     }
     
@@ -65,52 +96,132 @@ contract MyWish is AccessControl, ERC721Enumerable{
         return string(abi.encodePacked(base, _tokenURI));
     }
 
-    function createCollectable(address to) public onlyRole(MINTER_ROLE)  returns(bool) {
-        require(totalSupply() < _totalWishes, "Sale is over, all collectables sold."); //Might not need this one
-        require(balances[to] < _maxPurchaseAllowed,"too many tokens requested");
-        safeMint(to, _tokenId.current());
-        bool success = ownerOf(_tokenId.current()) == to;
+    function createCollectable(uint16 numTokens) public payable {
+        require(contractState == ContractState.MINTING, "Contract Not Minting");
+        require(msg.value == PRICE * numTokens,"Not Enough Eth Sent");
+        require(balances[msg.sender] + numTokens < maxPurchaseAllowed,"too many tokens already minted");
+        
+        _safeMint(msg.sender, _tokenId.current());
+        bool success = ownerOf(_tokenId.current()) == msg.sender;
+        require(success,"Token purchase failure");
         _tokenId.increment();
-        return success; 
+        emit tokensPurchased(numTokens, msg.sender);
+        
     }
 
-    function safeMint(address to, uint256 tokenId) private {
-        _safeMint(to, tokenId);
-    }
-
-
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId) 
-        internal 
-        override( ERC721Enumerable) {
-
-        super._beforeTokenTransfer(from, to, tokenId);
-    }
-
-    function supportsInterface(bytes4 interfaceId) 
-        public 
-        view 
-        override( ERC721Enumerable, AccessControl) 
-        returns (bool) {
-
-        return super.supportsInterface(interfaceId);
-    }
 
     
-    function _burn(uint256 tokenId) internal override(ERC721) {
-        super._burn(tokenId);
+    function getBalanceOfContract()
+    external
+    view
+    returns(uint256){
+        return address(this).balance;
     }
 
 
-    function setMinterRole(address minter) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(minter != address(0),"Please Enter Valid Address");
-        grantRole(MINTER_ROLE,minter);
-       
+    // function _beforeTokenTransfer(address from, address to, uint256 tokenId) 
+    //     internal 
+    //     override( ERC721Enumerable) {
+
+    //     super._beforeTokenTransfer(from, to, tokenId);
+    // }
+
+    // function supportsInterface(bytes4 interfaceId) 
+    //     public 
+    //     view 
+    //     override( ERC721Enumerable, AccessControl) 
+    //     returns (bool) {
+
+    //     return super.supportsInterface(interfaceId);
+    // }
+
+    
+    // function _burn(uint256 tokenId) internal override(ERC721) {
+    //     super._burn(tokenId);
+    // }
+
+
+    function getPrice() public pure returns(uint256){
+        return PRICE;
     }
-  
-    function getRole() public onlyRole(MINTER_ROLE) view  returns(bool) {
-       
+
+    function getContractState() public view returns(uint) {
+        return uint(contractState);
+    }
+
+    function setContractState(uint state) public onlyRole(STATE_MANAGER_ROLE) returns(bool) {
+        require(state < 6,"Not a proper state");
+        require(state > 0, "Not a proper state");
+        require(state  == uint(contractState) + 1, "Not a proper state transition");
+        contractState = ContractState(state);
         return true;
+
     }
+
+    function verify(bytes32 data, address account,bytes32 signature) public pure returns (bool) {
+        require(hasRole(account,WHITELIST_ROLE),"account isn't in whitelist role");
+        return keccak256(data)
+            .toEthSignedMessageHash()
+            .recover(signature) == account;
+    }
+
+    function whiteListMint(bytes32 sig, bytes32 data,uint numTokens) public payable  {
+        require(verify(data, whiteListManagerAddr, sig),"Data not signed by whitelistManager");
+        address whitelistee = address(data);
+        require(msg.send == whitelistee, "Not the sender of this signed address");
+        createCollectable(numTokens);
+
+    }
+
+
+    function releaseEther() internal {
+        address payable zach = payable(payee(zachIndex));
+        address payable evan = payable(payee(evanIndex));
+        address payable seb = payable(payee(sebIndex));
+        address payable wish = payable(payee(beneficiaryIndex));
+
+        require(seb !=  address(0), "Address of Seb is not set");
+        require(zach != address(0), "Address of Zach is not set");
+        require(evan != address(0), "Address of Evan is not set");
+        require(wish != address(0), "Address of Beneficiary is not set");
+        
+        release(zach);
+        release(wish); 
+        release(evan); 
+        release(seb);
+    }
+
+
+    function setContractState(uint state) public onlyRole(STATE_MANAGER_ROLE) returns(bool) {
+        require(state < 6,"Not a proper state");
+        require(state > 0, "Not a proper state");
+        require(state  == uint(contractState) + 1, "Not a proper state transition");
+        contractState = ContractState(state);
+        return true;
+
+    }
+
+    function getContractState() public view returns(uint) {
+        return uint(contractState);
+    }
+
+    function setStateManagerRole(address stateManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(stateManager != address(0),"Please Enter Valid Address");
+        grantRole(STATE_MANAGER_ROLE,stateManager);
+       
+    }
+
+    function setURIManagerRole(address stateManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(uriManager != address(0),"Please Enter Valid Address");
+        grantRole(BASEURI_ROLE,stateManager);
+       
+    }
+    function setWhiteListManagerRole(address stateManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(whiteListManager != address(0),"Please Enter Valid Address");
+        grantRole(WHITELIST_ROLE,stateManager);
+       
+    }
+
 
 
 } 
