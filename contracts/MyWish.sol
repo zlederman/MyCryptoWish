@@ -29,6 +29,15 @@ contract MyWish is AccessControl, ERC721Enumerable{
     uint256 public constant _totalWishes = 10000; 
     uint256 public constant _maxPurchaseAllowed = 20; 
 
+<<<<<<< Updated upstream
+=======
+    //pricing
+    uint256 constant PRICE = 31424425476017000;
+    uint256 public constant maxSupply = 10000; 
+    uint256 public constant maxPurchaseAllowed = 5;
+    
+    //balances
+>>>>>>> Stashed changes
     mapping(address => uint256)public balances;
     string  __name = "MyWish";
     string _baseURIextended = 'WE NEED IPFS';
@@ -36,9 +45,17 @@ contract MyWish is AccessControl, ERC721Enumerable{
     //Add mapping token URIs
 
 
+<<<<<<< Updated upstream
     constructor() ERC721("MyWish","WSH") {
         _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
         _setRoleAdmin(MINTER_ROLE, DEFAULT_ADMIN_ROLE);
+=======
+    constructor() 
+    ERC721("MyWish","WSH")
+    {
+         _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
+  
+>>>>>>> Stashed changes
         // need to set this role up
         _setRoleAdmin(BASEURI_ROLE,DEFAULT_ADMIN_ROLE);
     }
@@ -101,9 +118,28 @@ contract MyWish is AccessControl, ERC721Enumerable{
     }
 
 
+<<<<<<< Updated upstream
     function setMinterRole(address minter) public onlyRole(DEFAULT_ADMIN_ROLE) {
         require(minter != address(0),"Please Enter Valid Address");
         grantRole(MINTER_ROLE,minter);
+=======
+    function setContractState(uint state) public onlyRole(DEFAULT_ADMIN_ROLE) returns(bool) {
+        require(state < 6,"Not a proper state");
+        require(state > 0, "Not a proper state");
+        require(state  == uint(contractState) + 1, "Not a proper state transition");
+        contractState = ContractState(state);
+        return true;
+
+    }
+
+    function getContractState() public view returns(uint) {
+        return uint(contractState);
+    }
+
+    function setStateManagerRole(address stateManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(stateManager != address(0),"Please Enter Valid Address");
+        grantRole(STATE_MANAGER_ROLE,stateManager);
+>>>>>>> Stashed changes
        
     }
   
