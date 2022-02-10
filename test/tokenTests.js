@@ -36,7 +36,6 @@ contract("myWish", async (accounts) => {
          catch(err){
             assert.include(err.message,'value out-of-bounds', "The error message should contain 'value out-of-bounds'")
          }
-   
             try{
                await contractInstance.setContractState.sendTransaction(contractState + 1,{from: accounts[1],gas:1250000})
             }

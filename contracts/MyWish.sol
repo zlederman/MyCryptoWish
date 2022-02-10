@@ -22,40 +22,41 @@ contract MyWish is AccessControl, ERC721Enumerable{
     using Counters for Counters.Counter; 
     using SafeMath for uint256; 
     
+    enum ContractState {
+        PRESALE,
+        RAFFLE,
+        PREMINT,
+        MINTING,
+        OPEN
+    }
 
+    ContractState contractState;
     Counters.Counter private _tokenId; 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BASEURI_ROLE = keccak256("BASEURI_ROLE");
+    bytes32 public constant STATE_MANAGER_ROLE = keccak256("STATE_MANAGER_ROLE");
     uint256 public constant _totalWishes = 10000; 
     uint256 public constant _maxPurchaseAllowed = 20; 
 
-<<<<<<< Updated upstream
-=======
     //pricing
     uint256 constant PRICE = 31424425476017000;
     uint256 public constant maxSupply = 10000; 
     uint256 public constant maxPurchaseAllowed = 5;
     
     //balances
->>>>>>> Stashed changes
     mapping(address => uint256)public balances;
     string  __name = "MyWish";
     string _baseURIextended = 'WE NEED IPFS';
     
     //Add mapping token URIs
+    event contractStateChanged(ContractState from, ContractState to);
+    event tokensPurchased(uint numTokens, address buyer);
 
-
-<<<<<<< Updated upstream
-    constructor() ERC721("MyWish","WSH") {
-        _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
-        _setRoleAdmin(MINTER_ROLE, DEFAULT_ADMIN_ROLE);
-=======
     constructor() 
     ERC721("MyWish","WSH")
     {
          _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
   
->>>>>>> Stashed changes
         // need to set this role up
         _setRoleAdmin(BASEURI_ROLE,DEFAULT_ADMIN_ROLE);
     }
@@ -118,11 +119,6 @@ contract MyWish is AccessControl, ERC721Enumerable{
     }
 
 
-<<<<<<< Updated upstream
-    function setMinterRole(address minter) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(minter != address(0),"Please Enter Valid Address");
-        grantRole(MINTER_ROLE,minter);
-=======
     function setContractState(uint state) public onlyRole(DEFAULT_ADMIN_ROLE) returns(bool) {
         require(state < 6,"Not a proper state");
         require(state > 0, "Not a proper state");
@@ -139,7 +135,6 @@ contract MyWish is AccessControl, ERC721Enumerable{
     function setStateManagerRole(address stateManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
         require(stateManager != address(0),"Please Enter Valid Address");
         grantRole(STATE_MANAGER_ROLE,stateManager);
->>>>>>> Stashed changes
        
     }
   
