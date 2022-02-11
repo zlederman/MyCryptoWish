@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import NightSky from "./components/NightSky"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import PaymentHandlerContract from "./contracts/PaymentHandler.json";
+
 import getWeb3 from "./getWeb3";
 import AboutPage from "./components/about";
 import IntroPage from "./components/intro";
