@@ -105,14 +105,17 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div>
+          
+         
+          <div>
           <NightSky></NightSky>
         </div>
         <div>
           <IntroPage/>
+          
           {/* {this.renderSwitch(this.state.contractState)} */}
           
-          <RafflePage/>
+          {/* <RafflePage/> */}
           <AboutPage/>
           <div>
             <Footer/>
