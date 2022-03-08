@@ -11,10 +11,7 @@ import seb from "../assets/seb.png"
 import evan from "../assets/evan.png"
 import zach from "../assets/zach.png"
 import christina from "../assets/christina.png"
-import discord from "./rafflepage/icons/Discord-Logo-Black.svg"
-import twitter from "./rafflepage/icons/iconmonstr-twitter-1.svg"
-import instagram from "./rafflepage/icons/instagram.svg"
-import linkedIn from "./rafflepage/icons/linkedin.svg"
+import aboutConfig from "../assets/team.json"
 
 
 class AboutPage extends Component{
@@ -51,7 +48,11 @@ class AboutPage extends Component{
 
     render(){
         return(
-                <div className="container" id="page">                   
+                <div className="container" id="page"> 
+
+                    <div className="container" id="countdown">
+                        <h2 className='section-heading-count'> Raffle Goes Live At 10k On Discord! </h2>
+                    </div>
                     <div className="container" id="brief">
                         <div className="brief-p"> 
                             <h2 className="section-heading"><b><i>Hope for a Brighter Future Starts With a Wish</i></b></h2>               
@@ -83,68 +84,20 @@ class AboutPage extends Component{
                             <div className="heading team" >
                                 <h2 className="section-heading"><b><i>The Team</i></b></h2>
                             </div>
+                            <div className="creator" id="description">
+                            <TeamCard name={evan} about={aboutConfig.evan}></TeamCard>
+                            <TeamCard name={zach} about={aboutConfig.zach}></TeamCard>
+                            <TeamCard name={seb} about={aboutConfig.seb}></TeamCard>
+                            <TeamCard name={christina} about={aboutConfig.cristina}></TeamCard>
+                             </div>        
                             {/* <div className="underline" id="team"></div>
                             <div className="sub-heading team" id="team">
                                 <h5><b><i>Three college kids wanting to<br>
                                 </br> learn more about NFTs and give back</i></b></h5>
                             </div> */}
-                            <div className="creator" id="description">
-                                <div className="creator-contianer">
-                                    <Card style={{ background: '#FDD644', borderRadius: '12px'}}>
-                                        <Card.Img variant="top" src={evan} />
-                                        <Card.Body>
-                                            <Card.Title style={{ color: '#0A0818'}}>@EvanGolinsky</Card.Title> 
-                                            <Card.Title style={{ color: '#0A0818'}}>CEO</Card.Title>  
-                                            
-                                        </Card.Body>
-                                        {/* <div className="card-button">
-                                            <Button style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
-                                            <Button href="https://www.linkedin.com/in/evangolinsky142/" style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={linkedIn}/></Button>
-                                        </div> */}
-                                    </Card>
-                                </div>
-                                <div className="creator-contianer">
-                                    <Card style={{ background: '#FDD644', borderRadius: '12px'}}>
-                                        <Card.Img variant="top" src={zach} />
-                                        <Card.Body>
-                                            <Card.Title style={{ color: '#0A0818'}}>@Zachary_Lederman</Card.Title>
-                                            <Card.Title style={{ color: '#0A0818'}}>CTO</Card.Title>
-                                        </Card.Body>
-                                        {/* <div className="card-button">
-                                            <Button style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
-                                            <Button href="https://www.linkedin.com/in/zachary-lederman/" style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={linkedIn}/></Button>
-                                        </div> */}
-                                    </Card>
-                                </div>
-                                <div className="creator-contianer">
-                                    <Card style={{ background: '#FDD644', borderRadius: '12px'}}>
-                                        <Card.Img variant="top" src={seb} />
-                                        <Card.Body>
-                                            <Card.Title style={{ color: '#0A0818'}}>@BalthroJawns</Card.Title>
-                                            <Card.Title style={{ color: '#0A0818'}}>CTO</Card.Title>
-                                        </Card.Body>
-                                        {/* <div className="card-button">
-                                            <Button href="https://www.instagram.com/sebmelendez/" style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
-                                            <Button href="https://www.linkedin.com/in/sebastian-melendez-56a7881b3/" style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={linkedIn}/></Button>
-                                        </div> */}
-                                    </Card>
-                                </div>
-                                <div className="creator-contianer">
-                                    <Card style={{ background: '#FDD644', borderRadius: '12px'}}>
-                                        <Card.Img variant="top" src={christina} />
-                                        <Card.Body>
-                                            <Card.Title style={{ color: '#0A0818'}}>@Cristina_Gonzalez</Card.Title>
-                                            <Card.Title style={{ color: '#0A0818'}}>Artist</Card.Title>
-                                        </Card.Body>
-                                        {/* <div className="card-button">
-                                            <Button style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={instagram}/></Button>
-                                            <Button style={{background: 'transparent', borderColor: 'transparent', width: '50%'}}><img className="card-img" src={linkedIn}/></Button>
-                                        </div> */}
-                                    </Card>
-                                </div>
-
-                            </div>
-                        </div>                        
+                        
+                        </div>
+                                      
                     </div>
 
                     <div className = "container" id="gallery">
@@ -199,7 +152,7 @@ class AboutPage extends Component{
                                         <ul id="purchase-steps">
                                             <li><b>Step 1:</b> Join Discord</li>
                                             <li><b>Step 2:</b> Install Metamask (On supported Browser)</li>
-                                            <li><b>Step 3:</b> Deposit .05 ETH plus gas per wish into Metamask</li>
+                                            <li><b>Step 3:</b> Enter Raffle</li>
                                             <li><b>Step 4:</b> Make your wish!</li> 
                                             {/* 5% for raffles */}
                                         </ul>
@@ -221,4 +174,27 @@ class AboutPage extends Component{
 
     }
 }
+
+
+class TeamCard extends Component {
+    constructor(props){
+        super(props);
+    }
+    render() {
+        return(
+        <div className="creator-contianer">
+        <Card style={{ background: '#FDD644', borderRadius: '12px'}}>
+            <Card.Img variant="top" src={this.props.name}  />
+            <Card.Body>
+                <Card.Title style={{ color: '#0A0818' }}>@{this.props.about.handle}</Card.Title> 
+                <Card.Text style={{ color: '#0A0818'}}>{this.props.about.position}</Card.Text>  
+            </Card.Body>
+         
+        </Card>
+    </div>
+    )
+    }
+}
+
+
 export default AboutPage
